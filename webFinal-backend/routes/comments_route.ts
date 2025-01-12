@@ -18,7 +18,7 @@ const router = express.Router();
  *       type: object
  *       required:
  *         - content
- *         - writer
+ *         - owner
  *         - postId
  *       properties:
  *         _id:
@@ -27,16 +27,16 @@ const router = express.Router();
  *         content:
  *           type: string
  *           description: The content of the comment
- *         writer:
+ *         owner:
  *           type: string
- *           description: The writer id of the comment
+ *           description: The owner id of the comment
  *         postId:
  *           type: string
  *           description: The post id the comment belongs to
  *       example:
  *         _id: 60d0fe4f5311236168a109ca
  *         content: This is a comment
- *         writer: 60d0fe4f5311236168a109cb
+ *         owner: 60d0fe4f5311236168a109cb
  *         postId: 60d0fe4f5311236168a109cc
  */
 
@@ -59,7 +59,7 @@ const router = express.Router();
  *       500:
  *         description: Server error
  */
-router.get("/", authMiddleware, commentsController.getAll.bind(commentsController));
+router.get("/", authMiddleware, commentsController.getAllHandler(commentsController, 'owner', [{ path: 'owner', select: '' }]));
 
 /**
  * @swagger

@@ -59,7 +59,10 @@ import { authMiddleware } from "../controllers/auth_controller";
  *       500:
  *         description: Server error
  */
-router.get("/", authMiddleware, postsController.getAll.bind(postsController));
+router.get("/", authMiddleware, postsController.getAllHandler(postsController, "owner",
+    [{ path: 'owner', select: 'userName' }, { path: 'comments', select: '' },
+        // { path: 'comments.owner', select: 'userName' }
+    ]));
 
 /**
  * @swagger

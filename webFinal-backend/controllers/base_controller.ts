@@ -1,23 +1,44 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { Model } from "mongoose";
 
-  /* istanbul ignore next */
+interface populationField {
+  path: string
+  select: string
+}
+
+/* istanbul ignore next */
 class BaseController<T> {
   model: Model<T>;
   constructor(model: any) {
     this.model = model;
   }
 
-  async getAll(req: Request, res: Response) {
-    const filter = req.query.owner;
-    try {
-      if (filter) {
-        const item = await this.model.find({ owner: filter }).populate();
-        res.send(item);
-      } else {
-        const items = await this.model.find();
-        res.send(items);
+  getAllHandler(controller: any, filterField: string, populationFields: populationField[]) {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        await controller.getAll(req, res, filterField, populationFields);
+      } catch (error) {
+        next(error); // Pass errors to Express error handler
       }
+    };
+  }
+
+  async getAll(req: Request, res: Response, filterField: string, populationFields: populationField[]) {
+    const filterValue = req.query[filterField];
+    try {
+      let query = this.model.find();
+      if (filterValue) {
+        query = query.where(filterField).equals(filterValue);
+      }
+      if (populationFields && populationFields.length > 0) {
+        populationFields.forEach(field => {
+          if (field.select != '') query.populate({ path: field.path, select: field.select });
+          else query = query.populate(field);
+        })
+        query = query.populate(populationFields);
+      }
+      const items = await query;
+      res.send(items);
     } catch (error) {
       res.status(400).send(error);
     }

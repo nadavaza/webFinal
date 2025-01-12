@@ -2,13 +2,14 @@ import mongoose from "mongoose";
 
 export interface IComments {
   content: string;
-  writer: string;
+  owner: string;
   postId: string;
 }
 
 const commentsSchema = new mongoose.Schema<IComments>({
-  writer: {
+  owner: {
     type: String,
+    ref: "Users",
     required: true,
   },
   content: {

@@ -12,3 +12,9 @@ export const StyledLogo = styled("img")(() => ({
   height: "5rem",
   width: "5rem",
 }));
+
+export const StyledProfile = styled("div")(() => ({
+  ":hover": {
+    cursor: "pointer"
+  }
+}));

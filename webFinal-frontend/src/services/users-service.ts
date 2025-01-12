@@ -16,6 +16,13 @@ class UsersService {
       throw error;
     }
   }
+  async logout(refreshToken: string) {
+    try {
+      return (await apiClient.post<ILoginUser>("/auth/logout", { refreshToken })).data;
+    } catch (error: any) {
+      throw error;
+    }
+  }
 }
 
 export default new UsersService();

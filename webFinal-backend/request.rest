@@ -51,7 +51,7 @@ POST http://localhost:3000/comments
 Content-Type: application/json
 
 {
-    "writer": "Valeriya Levinson",
+    "owner": "Valeriya Levinson",
     "content": "This is a great post!",
     "postId": "6744dd9f78f52373fe5641d9"
 }
