@@ -5,7 +5,7 @@ GET http://localhost:3000/posts
 
 ###
 
-GET http://localhost:3000/posts?sender=nadav
+GET http://localhost:3000/posts?owner=nadav
 
 ###
 
@@ -18,7 +18,7 @@ Content-Type: application/json
 
 {
     "title": "Hello",
-    "sender": "nadav",
+    "owner": "nadav",
     "content": "Hello World..."
 }
 
@@ -33,7 +33,7 @@ Content-Type: application/json
 
 {   
     "title": "Hello",
-    "sender": "nadav",
+    "owner": "nadav",
     "content": "Bey Bey Bey2"
 }
 

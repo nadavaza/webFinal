@@ -22,12 +22,16 @@ type Payload = {
 };
 
 const register = async (req: Request, res: Response) => {
+  const existingUser = await userModel.findOne({ userName: req.body.userName });
+  if (existingUser) {
+    res.status(400).send("user already exists");
+    return;
+  }
   try {
     const password = req.body.password;
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
     const user = await userModel.create({
-      email: req.body.email,
       userName: req.body.userName,
       password: hashedPassword,
     });
@@ -69,7 +73,7 @@ const generateToken = (userId: string): tTokens | null => {
 
 const login = async (req: Request, res: Response) => {
   try {
-    const user = await userModel.findOne({ email: req.body.email });
+    const user = await userModel.findOne({ userName: req.body.userName });
     if (!user) {
       res.status(400).send("wrong username or password");
       return;
@@ -160,16 +164,13 @@ const logout = async (req: Request, res: Response) => {
 
 const deleteUser = async (req: Request, res: Response) => {
   try {
-    const user = await userModel.findOne({ email: req.body.email });
+    const user = await userModel.findOne({ userName: req.body.userName });
     if (!user) {
       res.status(400).send("fail");
+    } else {
+      await user.deleteOne();
+      res.status(200).send("deleted");
     }
-      else
-      {
-        await user.deleteOne();
-        res.status(200).send("deleted");
-      }
-   
   } catch (err) {
     res.status(400).send("fail");
   }

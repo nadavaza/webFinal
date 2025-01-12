@@ -59,7 +59,7 @@ const router = express.Router();
  *       500:
  *         description: Server error
  */
-router.get("/", commentsController.getAll.bind(commentsController));
+router.get("/", authMiddleware, commentsController.getAll.bind(commentsController));
 
 /**
  * @swagger
@@ -87,7 +87,7 @@ router.get("/", commentsController.getAll.bind(commentsController));
  *       500:
  *         description: Server error
  */
-router.get("/:id", commentsController.getById.bind(commentsController));
+router.get("/:id", authMiddleware, commentsController.getById.bind(commentsController));
 
 /**
  * @swagger

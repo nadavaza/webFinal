@@ -4,11 +4,11 @@ import postsController from "../controllers/posts_controller";
 import { authMiddleware } from "../controllers/auth_controller";
 
 /**
-* @swagger
-* tags:
-*   name: Posts
-*   description: The Posts API
-*/
+ * @swagger
+ * tags:
+ *   name: Posts
+ *   description: The Posts API
+ */
 
 /**
  * @swagger
@@ -59,7 +59,7 @@ import { authMiddleware } from "../controllers/auth_controller";
  *       500:
  *         description: Server error
  */
-router.get("/", postsController.getAll.bind(postsController));
+router.get("/", authMiddleware, postsController.getAll.bind(postsController));
 
 /**
  * @swagger
@@ -88,7 +88,7 @@ router.get("/", postsController.getAll.bind(postsController));
  *       500:
  *         description: Server error
  */
-router.get("/:id", postsController.getById.bind(postsController));
+router.get("/:id", authMiddleware, postsController.getById.bind(postsController));
 
 /**
  * @swagger
@@ -113,13 +113,13 @@ router.get("/:id", postsController.getById.bind(postsController));
  *               content:
  *                 type: string
  *                 description: The content of the post
- *               sender:
+ *               owner:
  *                 type: string
- *                 description: The sender of the post
+ *                 description: The owner of the post
  *             required:
  *               - title
  *               - content
- *               - sender
+ *               - owners
  *     responses:
  *       201:
  *         description: Post created successfully
@@ -133,7 +133,6 @@ router.get("/:id", postsController.getById.bind(postsController));
  *         description: Server error
  */
 router.post("/", authMiddleware, postsController.create.bind(postsController));
-
 
 /**
  * @swagger

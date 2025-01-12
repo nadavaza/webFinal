@@ -28,38 +28,47 @@ type User = IUser & {
 };
 
 const testUser: User = {
-  email: "test@user.com",
-  password: "testpassword",
   userName: "testuser",
+  password: "testpassword",
 };
 
 describe("Auth API Tests", () => {
   test("Auth test register", async () => {
-    const response = await request(app).post(baseUrl + "/register").send(testUser);
+    const response = await request(app)
+      .post(baseUrl + "/register")
+      .send(testUser);
     expect(response.statusCode).toBe(200);
   });
 
-  test("Auth test register fail - duplicate email", async () => {
-    const response = await request(app).post(baseUrl + "/register").send(testUser);
+  test("Auth test register fail - duplicate userName", async () => {
+    const response = await request(app)
+      .post(baseUrl + "/register")
+      .send(testUser);
     expect(response.statusCode).not.toBe(200);
 
-    expect(response.body.errorResponse).toHaveProperty('errmsg', expect.stringContaining('duplicate key error'));
+    expect(response.body.errorResponse).toHaveProperty("errmsg", expect.stringContaining("duplicate key error"));
   });
 
   test("Auth test register fail - missing fields", async () => {
-    const response = await request(app).post(baseUrl + "/register").send({
-      email: "sdsdfsd",
-    });
+    const response = await request(app)
+      .post(baseUrl + "/register")
+      .send({
+        userName: "sdsdfsd",
+      });
     expect(response.statusCode).not.toBe(200);
-    const response2 = await request(app).post(baseUrl + "/register").send({
-      email: "",
-      password: "sdfsd",
-    });
+    const response2 = await request(app)
+      .post(baseUrl + "/register")
+      .send({
+        userName: "",
+        password: "sdfsd",
+      });
     expect(response2.statusCode).not.toBe(200);
   });
 
   test("Auth test login", async () => {
-    const response = await request(app).post(baseUrl + "/login").send(testUser);
+    const response = await request(app)
+      .post(baseUrl + "/login")
+      .send(testUser);
     expect(response.statusCode).toBe(200);
     const accessToken = response.body.accessToken;
     const refreshToken = response.body.refreshToken;
@@ -72,7 +81,9 @@ describe("Auth API Tests", () => {
   });
 
   test("Check tokens are not the same", async () => {
-    const response = await request(app).post(baseUrl + "/login").send(testUser);
+    const response = await request(app)
+      .post(baseUrl + "/login")
+      .send(testUser);
     const accessToken = response.body.accessToken;
     const refreshToken = response.body.refreshToken;
 
@@ -81,23 +92,29 @@ describe("Auth API Tests", () => {
   });
 
   test("Auth test login fail - incorrect password", async () => {
-    const response = await request(app).post(baseUrl + "/login").send({
-      email: testUser.email,
-      password: "sdfsd",
-    });
+    const response = await request(app)
+      .post(baseUrl + "/login")
+      .send({
+        userName: testUser.userName,
+        password: "sdfsd",
+      });
     expect(response.statusCode).not.toBe(200);
 
-    const response2 = await request(app).post(baseUrl + "/login").send({
-      email: "dsfasd",
-      password: "sdfsd",
-    });
+    const response2 = await request(app)
+      .post(baseUrl + "/login")
+      .send({
+        userName: "dsfasd",
+        password: "sdfsd",
+      });
     expect(response2.statusCode).not.toBe(200);
   });
 
   test("Auth test refresh token", async () => {
-    const response = await request(app).post(baseUrl + "/refresh").send({
-      refreshToken: testUser.refreshToken,
-    });
+    const response = await request(app)
+      .post(baseUrl + "/refresh")
+      .send({
+        refreshToken: testUser.refreshToken,
+      });
     expect(response.statusCode).toBe(200);
     expect(response.body.accessToken).toBeDefined();
     expect(response.body.refreshToken).toBeDefined();
@@ -106,42 +123,47 @@ describe("Auth API Tests", () => {
   });
 
   test("Auth test logout", async () => {
-    const response = await request(app).post(baseUrl + "/login").send(testUser);
+    const response = await request(app)
+      .post(baseUrl + "/login")
+      .send(testUser);
     expect(response.statusCode).toBe(200);
     testUser.accessToken = response.body.accessToken;
     testUser.refreshToken = response.body.refreshToken;
 
-    const response2 = await request(app).post(baseUrl + "/logout").send({
-      refreshToken: testUser.refreshToken,
-    });
+    const response2 = await request(app)
+      .post(baseUrl + "/logout")
+      .send({
+        refreshToken: testUser.refreshToken,
+      });
     expect(response2.statusCode).toBe(200);
 
-    const response3 = await request(app).post(baseUrl + "/refresh").send({
-      refreshToken: testUser.refreshToken,
-    });
+    const response3 = await request(app)
+      .post(baseUrl + "/refresh")
+      .send({
+        refreshToken: testUser.refreshToken,
+      });
     expect(response3.statusCode).not.toBe(200);
   });
-test("Auth test delete user", async () => {
-    const loginResponse = await request(app).post(baseUrl + "/login").send(testUser);
+  test("Auth test delete user", async () => {
+    const loginResponse = await request(app)
+      .post(baseUrl + "/login")
+      .send(testUser);
     const accessToken = loginResponse.body.accessToken;
 
     const deleteResponse = await request(app)
-        .delete(baseUrl + "/delete") 
-        .send({ email: testUser.email })
-        .set('Authorization', 'JWT ' + accessToken); 
+      .delete(baseUrl + "/delete")
+      .send({ userName: testUser.userName })
+      .set("Authorization", "JWT " + accessToken);
     expect(deleteResponse.statusCode).toBe(200);
-});
-
-test("Auth test delete user fail - non existing user", async () => {
-    const nonExistingUserEmail = "nonexistentuser@domain.com";
-  
-    const response = await request(app)
-      .delete(baseUrl + "/delete")  
-      .send({ email: nonExistingUserEmail })  
-      .set('Authorization', 'JWT ' + testUser.accessToken); 
-    expect(response.statusCode).toBe(400);
-
   });
 
-    
+  test("Auth test delete user fail - non existing user", async () => {
+    const nonExistingUserUserName = "nonExistentuserName";
+
+    const response = await request(app)
+      .delete(baseUrl + "/delete")
+      .send({ userName: nonExistingUserUserName })
+      .set("Authorization", "JWT " + testUser.accessToken);
+    expect(response.statusCode).toBe(400);
+  });
 });

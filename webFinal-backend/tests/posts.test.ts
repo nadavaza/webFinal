@@ -9,10 +9,9 @@ var app: Express;
 
 type User = IUser & { token?: string };
 const testUser: User = {
-  email: "test@user.com",
   password: "testpassword",
   userName: "testuser",
-}
+};
 
 beforeAll(async () => {
   console.log("beforeAll");
@@ -42,12 +41,13 @@ describe("Posts Tests", () => {
   });
 
   test("Test Create Post", async () => {
-    const response = await request(app).post("/posts")
+    const response = await request(app)
+      .post("/posts")
       .set({ authorization: "JWT " + testUser.token })
       .send({
         title: "Test Post",
         content: "Test Content",
-        sender: "TestOwner",
+        owner: "TestOwner",
       });
     expect(response.statusCode).toBe(201);
     expect(response.body.title).toBe("Test Post");
@@ -55,7 +55,6 @@ describe("Posts Tests", () => {
     postId = response.body._id;
   });
 
- 
   test("Test get post by id", async () => {
     const response = await request(app).get("/posts/" + postId);
     expect(response.statusCode).toBe(200);
@@ -64,12 +63,13 @@ describe("Posts Tests", () => {
   });
 
   test("Test Create Post 2", async () => {
-    const response = await request(app).post("/posts")
+    const response = await request(app)
+      .post("/posts")
       .set({ authorization: "JWT " + testUser.token })
       .send({
         title: "Test Post 2",
         content: "Test Content 2",
-        sender: "TestOwner2",
+        owner: "TestOwner2",
       });
     expect(response.statusCode).toBe(201);
   });
@@ -81,7 +81,8 @@ describe("Posts Tests", () => {
   });
 
   test("Test Delete Post", async () => {
-    const response = await request(app).delete("/posts/" + postId)
+    const response = await request(app)
+      .delete("/posts/" + postId)
       .set({ authorization: "JWT " + testUser.token });
     expect(response.statusCode).toBe(200);
     const response2 = await request(app).get("/posts/" + postId);
@@ -89,7 +90,8 @@ describe("Posts Tests", () => {
   });
 
   test("Test Create Post fail", async () => {
-    const response = await request(app).post("/posts")
+    const response = await request(app)
+      .post("/posts")
       .set({ authorization: "JWT " + testUser.token })
       .send({
         content: "Test Content 2",

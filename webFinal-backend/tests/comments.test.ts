@@ -10,18 +10,17 @@ var app: Express;
 
 type User = IUser & { token?: string };
 const testUser: User = {
-  email: "test@user.com",
   password: "testpassword",
   userName: "testuser",
 };
 
-const testPost : IPost = {
+const testPost: IPost = {
   title: "Test Post",
   content: "This is a test post content",
-  sender : "testuser",
+  owner: "testuser",
 };
 
-const testComment : IComments = {} as IComments;
+const testComment: IComments = {} as IComments;
 
 let postId: string;
 
@@ -36,7 +35,7 @@ beforeAll(async () => {
   testUser.token = loginResponse.body.accessToken;
   testUser._id = loginResponse.body._id;
   expect(testUser.token).toBeDefined();
- 
+
   const postResponse = await request(app)
     .post("/posts")
     .set("Authorization", "JWT " + testUser.token)
@@ -54,10 +53,10 @@ beforeAll(async () => {
 });
 
 afterAll((done) => {
-    console.log("afterAll");
-    mongoose.connection.close();
-    done();
-  });
+  console.log("afterAll");
+  mongoose.connection.close();
+  done();
+});
 
 describe("Comments API Tests", () => {
   test("Create comment on a post", async () => {
@@ -72,18 +71,16 @@ describe("Comments API Tests", () => {
   });
 
   test("Fail to create comment without token", async () => {
-    const response = await request(app)
-      .post(`/comments`)
-      .send(testComment);
+    const response = await request(app).post(`/comments`).send(testComment);
 
     expect(response.statusCode).toBe(401);
   });
 
   test("Delete a comment", async () => {
     const response = await request(app)
-    .post(`/comments`)
-    .set("Authorization", "JWT " + testUser.token)
-    .send(testComment);
+      .post(`/comments`)
+      .set("Authorization", "JWT " + testUser.token)
+      .send(testComment);
 
     const commentId = response.body._id;
 
@@ -105,9 +102,7 @@ describe("Comments API Tests", () => {
     const commentId = commentResponse.body._id;
 
     // Attempt to delete with invalid token
-    const deleteResponse = await request(app)
-      .delete(`/comments/${commentId}`)
-      .set("Authorization", "JWT invalidtoken");
+    const deleteResponse = await request(app).delete(`/comments/${commentId}`).set("Authorization", "JWT invalidtoken");
 
     expect(deleteResponse.statusCode).toBe(401);
   });

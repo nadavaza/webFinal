@@ -3,69 +3,63 @@ const router = express.Router();
 import authController from "../controllers/auth_controller";
 
 /**
-* @swagger
-* tags:
-*   name: Auth
-*   description: The Authentication API
-*/
+ * @swagger
+ * tags:
+ *   name: Auth
+ *   description: The Authentication API
+ */
 
 /**
-* @swagger
-* components:
-*   securitySchemes:
-*     bearerAuth:
-*       type: http
-*       scheme: bearer
-*       bearerFormat: JWT
-*/
-
-
-/**
-* @swagger
-* components:
-*   schemas:
-*     User:
-*       type: object
-*       required:
-*         - name
-*         - email
-*         - password
-*       properties:
-*         name:
-*           type: string
-*           description: The user's name
-*         email:
-*           type: string
-*           description: The user's email
-*         password:
-*           type: string
-*           description: The user's password
-*       example:
-*         name: 'Bob'
-*         email: 'bob@gmail.com'
-*         password: '123456'
-*/
+ * @swagger
+ * components:
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ */
 
 /**
-* @swagger
-* /auth/register:
-*   post:
-*     summary: registers a new user
-*     tags: [Auth]
-*     requestBody:
-*       required: true
-*       content:
-*         application/json:
-*           schema:
-*             $ref: '#/components/schemas/User'
-*     responses:
-*       200:
-*         description: The new user
-*         content:
-*           application/json:
-*             schema:
-*               $ref: '#/components/schemas/User'
-*/
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       required:
+ *         - name
+ *         - password
+ *       properties:
+ *         name:
+ *           type: string
+ *           description: The user's name
+ *         password:
+ *           type: string
+ *           description: The user's password
+ *       example:
+ *         name: 'Bob'
+ *         password: '123456'
+ */
+
+/**
+ * @swagger
+ * /auth/register:
+ *   post:
+ *     summary: registers a new user
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       200:
+ *         description: The new user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ */
 router.post("/register", authController.register);
 
 /**

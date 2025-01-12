@@ -12,7 +12,7 @@ class BaseController<T> {
     const filter = req.query.owner;
     try {
       if (filter) {
-        const item = await this.model.find({ owner: filter });
+        const item = await this.model.find({ owner: filter }).populate();
         res.send(item);
       } else {
         const items = await this.model.find();
