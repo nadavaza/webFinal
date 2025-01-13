@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import { routes } from "./router";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { NavBar } from "./components/navBar/NavBar";
 
 const theme = createTheme({
   palette: {
@@ -18,9 +19,14 @@ createRoot(document.getElementById("root")!).render(
     <ThemeProvider theme={theme}>
       <GoogleOAuthProvider clientId="asds">
         <BrowserRouter>
+          <NavBar />
           <Routes>
             {routes.map((currRoute, index) => (
-              <Route path={currRoute.path} Component={currRoute.component} key={index} />
+              <Route
+                path={currRoute.path}
+                Component={currRoute.component}
+                key={index}
+              />
             ))}
           </Routes>
         </BrowserRouter>

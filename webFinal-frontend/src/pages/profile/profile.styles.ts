@@ -1,14 +1,14 @@
 import { Card } from "@mui/material";
 import styled from "styled-components";
 
-export const StyledLogin = styled("div")(() => ({
+export const StyledProfile = styled("div")(() => ({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
   marginTop: "4rem",
 }));
 
-export const StyledLoginCard = styled(Card)(() => ({
+export const StyledProfileCard = styled(Card)(() => ({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",

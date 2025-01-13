@@ -35,7 +35,28 @@ const register = async (req: Request, res: Response) => {
       userName: req.body.userName,
       password: hashedPassword,
     });
-    res.status(200).send(user);
+    /* istanbul ignore next */
+    if (!process.env.TOKEN_SECRET) {
+      res.status(500).send("Server Error");
+      return;
+    }
+
+    const tokens = generateToken(user._id);
+    if (!tokens) {
+      res.status(500).send("Server Error");
+      return;
+    }
+    if (!user.refreshToken) {
+      user.refreshToken = [];
+    }
+    user.refreshToken.push(tokens.refreshToken);
+    await user.save();
+    res.status(200).send({
+      _id: user._id,
+      userName: user.userName,
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+    });
   } catch (err) {
     res.status(400).send(err);
   }
@@ -78,7 +99,10 @@ const login = async (req: Request, res: Response) => {
       res.status(400).send("wrong username or password");
       return;
     }
-    const validPassword = await bcrypt.compare(req.body.password, user.password);
+    const validPassword = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
     if (!validPassword) {
       res.status(400).send("wrong username or password");
       return;
@@ -100,9 +124,10 @@ const login = async (req: Request, res: Response) => {
     user.refreshToken.push(tokens.refreshToken);
     await user.save();
     res.status(200).send({
+      _id: user._id,
+      userName: user.userName,
       accessToken: tokens.accessToken,
       refreshToken: tokens.refreshToken,
-      _id: user._id,
     });
   } catch (err) {
     res.status(400).send(err);
@@ -121,34 +146,40 @@ const verifyRefreshToken = (refreshToken: string | undefined) => {
       reject("fail");
       return;
     }
-    jwt.verify(refreshToken, process.env.TOKEN_SECRET, async (err: any, payload: any) => {
-      if (err) {
-        reject("fail");
-        return;
-      }
-
-      const userId = payload._id;
-      try {
-        const user = await userModel.findById(userId);
-        if (!user) {
+    jwt.verify(
+      refreshToken,
+      process.env.TOKEN_SECRET,
+      async (err: any, payload: any) => {
+        if (err) {
           reject("fail");
           return;
         }
-        if (!user.refreshToken || !user.refreshToken.includes(refreshToken)) {
-          user.refreshToken = [];
-          await user.save();
+
+        const userId = payload._id;
+        try {
+          const user = await userModel.findById(userId);
+          if (!user) {
+            reject("fail");
+            return;
+          }
+          if (!user.refreshToken || !user.refreshToken.includes(refreshToken)) {
+            user.refreshToken = [];
+            await user.save();
+            reject("fail");
+            return;
+          }
+          const tokens = user.refreshToken!.filter(
+            (token) => token !== refreshToken
+          );
+          user.refreshToken = tokens;
+
+          resolve(user);
+        } catch (err) {
           reject("fail");
           return;
         }
-        const tokens = user.refreshToken!.filter((token) => token !== refreshToken);
-        user.refreshToken = tokens;
-
-        resolve(user);
-      } catch (err) {
-        reject("fail");
-        return;
       }
-    });
+    );
   });
 };
 
@@ -204,7 +235,11 @@ const refresh = async (req: Request, res: Response) => {
   }
 };
 
-export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export const authMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const authorization = req.header("authorization");
   const token = authorization && authorization.split(" ")[1];
 

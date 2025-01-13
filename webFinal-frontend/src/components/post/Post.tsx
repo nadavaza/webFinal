@@ -1,6 +1,6 @@
 import React from "react";
 import { StyledCard } from "./post.styles";
-import { CardContent, CardMedia, Typography } from "@mui/material";
+import { CardActions, CardContent, CardMedia, Typography } from "@mui/material";
 import { IPost } from "../../types/posts.types";
 
 export const Post: React.FC<{ post: IPost }> = ({ post }) => {
@@ -15,6 +15,9 @@ export const Post: React.FC<{ post: IPost }> = ({ post }) => {
           {post.content}
         </Typography>
       </CardContent>
+      <CardActions>
+        <Typography variant="body2">{post?.owner?.userName}</Typography>
+      </CardActions>
     </StyledCard>
   );
 };

@@ -1,3 +1,4 @@
+import { Card } from "@mui/material";
 import styled from "styled-components";
 
 export const StyledHome = styled("div")(() => ({
@@ -11,10 +12,4 @@ export const StyledHome = styled("div")(() => ({
 export const StyledLogo = styled("img")(() => ({
   height: "5rem",
   width: "5rem",
-}));
-
-export const StyledProfile = styled("div")(() => ({
-  ":hover": {
-    cursor: "pointer"
-  }
 }));
