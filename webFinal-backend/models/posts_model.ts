@@ -4,6 +4,7 @@ export interface IPost {
   title: string;
   content: string;
   owner: string;
+  photo: string;
 }
 
 const postSchema = new mongoose.Schema<IPost>(
@@ -17,13 +18,16 @@ const postSchema = new mongoose.Schema<IPost>(
       type: String,
       ref: "Users",
       required: true,
-    }
+    },
+    photo: {
+      type: String,
+    },
   },
-  { toJSON: { virtuals: true }, toObject: { virtuals: true } });
-
+  { toJSON: { virtuals: true }, toObject: { virtuals: true } }
+);
 
 postSchema.virtual("comments", {
-  ref: "Comments", 
+  ref: "Comments",
   localField: "_id",
   foreignField: "postId",
 });

@@ -1,7 +1,8 @@
 import React from "react";
-import { StyledCard } from "./post.styles";
-import { CardActions, CardContent, CardMedia, Typography } from "@mui/material";
+import { StyledCard, StyledCardActions } from "./post.styles";
+import { CardContent, Chip, Typography } from "@mui/material";
 import { IPost } from "../../types/posts.types";
+import CommentIcon from "@mui/icons-material/Comment";
 
 export const Post: React.FC<{ post: IPost }> = ({ post }) => {
   return (
@@ -11,13 +12,19 @@ export const Post: React.FC<{ post: IPost }> = ({ post }) => {
         <Typography variant="h5" color="primary">
           {post.title}
         </Typography>
-        <Typography variant="body1" color="secondary">
+        <Typography variant="h6" color="secondary">
           {post.content}
         </Typography>
       </CardContent>
-      <CardActions>
-        <Typography variant="body2">{post?.owner?.userName}</Typography>
-      </CardActions>
+      <StyledCardActions>
+        <Chip color="primary" label={post?.owner?.userName} />
+        <div>
+          <Typography variant="h6" color="secondary">
+            {post?.comments.length}
+            <CommentIcon color="secondary" />
+          </Typography>
+        </div>
+      </StyledCardActions>
     </StyledCard>
   );
 };

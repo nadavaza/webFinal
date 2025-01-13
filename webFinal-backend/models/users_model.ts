@@ -5,6 +5,7 @@ export interface IUser {
   password: string;
   _id?: string;
   refreshToken?: string[];
+  photo: string;
 }
 
 const userSchema = new mongoose.Schema<IUser>({
@@ -20,6 +21,9 @@ const userSchema = new mongoose.Schema<IUser>({
   refreshToken: {
     type: [String],
     default: [],
+  },
+  photo: {
+    type: String,
   },
 });
 

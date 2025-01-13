@@ -7,6 +7,7 @@ import { Post } from "../../components/post/Post";
 import nbaLogo from "../../assets/nbaLogo.png";
 import { StyledHome, StyledLogo } from "./home.styles";
 import { ToastContainer } from "react-toastify";
+import { AddNewPost } from "../../components/addNewPost/AddNewPost";
 
 export const Home: React.FC<{}> = () => {
   const [posts, setPosts] = useState<IPost[]>([]);
@@ -20,6 +21,8 @@ export const Home: React.FC<{}> = () => {
     fetchPosts();
   }, []);
 
+  const;
+
   return (
     <>
       <StyledHome>
@@ -27,9 +30,12 @@ export const Home: React.FC<{}> = () => {
           {HOME_TEXTS.TITLE}
         </Typography>
         <StyledLogo src={nbaLogo} />
-        {posts.map((post, index) => (
-          <Post post={post} key={index} />
-        ))}
+        <div>
+          {posts.map((post, index) => (
+            <Post post={post} key={index} />
+          ))}
+        </div>
+        <AddNewPost />
       </StyledHome>
       <ToastContainer />
     </>

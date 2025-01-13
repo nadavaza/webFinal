@@ -17,7 +17,7 @@ class PostsService {
       return (
         await apiClient.get<IPost[]>("/posts", {
           headers: { Authorization: `JWT ${getTokens().accessToken}` },
-          params: owner,
+          params: { owner },
         })
       ).data;
     } catch (error: any) {

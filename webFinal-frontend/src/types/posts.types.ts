@@ -5,6 +5,7 @@ export interface IPost {
   title: string;
   content: string;
   owner: IUser;
+  photo: string;
   _id: string;
   comments: IComment[];
 }

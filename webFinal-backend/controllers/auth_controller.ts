@@ -99,10 +99,7 @@ const login = async (req: Request, res: Response) => {
       res.status(400).send("wrong username or password");
       return;
     }
-    const validPassword = await bcrypt.compare(
-      req.body.password,
-      user.password
-    );
+    const validPassword = await bcrypt.compare(req.body.password, user.password);
     if (!validPassword) {
       res.status(400).send("wrong username or password");
       return;
@@ -146,40 +143,34 @@ const verifyRefreshToken = (refreshToken: string | undefined) => {
       reject("fail");
       return;
     }
-    jwt.verify(
-      refreshToken,
-      process.env.TOKEN_SECRET,
-      async (err: any, payload: any) => {
-        if (err) {
-          reject("fail");
-          return;
-        }
-
-        const userId = payload._id;
-        try {
-          const user = await userModel.findById(userId);
-          if (!user) {
-            reject("fail");
-            return;
-          }
-          if (!user.refreshToken || !user.refreshToken.includes(refreshToken)) {
-            user.refreshToken = [];
-            await user.save();
-            reject("fail");
-            return;
-          }
-          const tokens = user.refreshToken!.filter(
-            (token) => token !== refreshToken
-          );
-          user.refreshToken = tokens;
-
-          resolve(user);
-        } catch (err) {
-          reject("fail");
-          return;
-        }
+    jwt.verify(refreshToken, process.env.TOKEN_SECRET, async (err: any, payload: any) => {
+      if (err) {
+        reject("fail");
+        return;
       }
-    );
+
+      const userId = payload._id;
+      try {
+        const user = await userModel.findById(userId);
+        if (!user) {
+          reject("fail");
+          return;
+        }
+        if (!user.refreshToken || !user.refreshToken.includes(refreshToken)) {
+          user.refreshToken = [];
+          await user.save();
+          reject("fail");
+          return;
+        }
+        const tokens = user.refreshToken!.filter((token) => token !== refreshToken);
+        user.refreshToken = tokens;
+
+        resolve(user);
+      } catch (err) {
+        reject("fail");
+        return;
+      }
+    });
   });
 };
 
@@ -188,20 +179,6 @@ const logout = async (req: Request, res: Response) => {
     const user = await verifyRefreshToken(req.body.refreshToken);
     await user.save();
     res.status(200).send("success");
-  } catch (err) {
-    res.status(400).send("fail");
-  }
-};
-
-const deleteUser = async (req: Request, res: Response) => {
-  try {
-    const user = await userModel.findOne({ userName: req.body.userName });
-    if (!user) {
-      res.status(400).send("fail");
-    } else {
-      await user.deleteOne();
-      res.status(200).send("deleted");
-    }
   } catch (err) {
     res.status(400).send("fail");
   }
@@ -235,11 +212,7 @@ const refresh = async (req: Request, res: Response) => {
   }
 };
 
-export const authMiddleware = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const authorization = req.header("authorization");
   const token = authorization && authorization.split(" ")[1];
 
@@ -268,5 +241,4 @@ export default {
   login,
   refresh,
   logout,
-  deleteUser,
 };

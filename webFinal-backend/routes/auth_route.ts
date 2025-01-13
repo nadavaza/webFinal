@@ -167,30 +167,4 @@ router.post("/refresh", authController.refresh);
  */
 router.post("/logout", authController.logout);
 
-/**
- * @swagger
- * /auth/delete:
- *   delete:
- *     summary: Delete user
- *     description: Delete user and invalidate the refresh token
- *     tags:
- *       - Auth
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/User'
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: User deleted successfully
- *       401:
- *         description: Unauthorized
- *       500:
- *         description: Server error
- */
-router.delete("/delete", authController.deleteUser);
-
 export default router;

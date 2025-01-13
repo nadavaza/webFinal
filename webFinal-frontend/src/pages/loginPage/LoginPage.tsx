@@ -1,11 +1,7 @@
 import { Button, Stack, Tab, Tabs, TextField } from "@mui/material";
 import React, { useMemo } from "react";
 import { LOGIN_TEXTS } from "../../consts/loginConsts";
-import {
-  StyledLogin,
-  StyledLoginCard,
-  StyledLoginContainer,
-} from "./login.styles";
+import { StyledLogin, StyledLoginCard } from "./login.styles";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { Controller, useForm } from "react-hook-form";
 import usersService from "../../services/users-service";
@@ -13,7 +9,7 @@ import { IUser } from "../../types/users.types";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router";
 import { setTokens } from "../../services/token-service";
-import { useStore } from "zustand";
+import { useStore } from "../../store/store";
 
 interface IFormFields {
   userName: string;
@@ -30,15 +26,14 @@ export const LoginPage: React.FC<{}> = () => {
       password: "",
     },
   });
-  const user = useStore((state: { user: any; }) => state.user);
+  const { setUser } = useStore();
 
   const onSubmit = handleSubmit(async (user: IFormFields) => {
     try {
-      const loggedUser = isLogin
-        ? await usersService.login(user as IUser)
-        : await usersService.register(user as IUser);
+      const loggedUser = isLogin ? await usersService.login(user as IUser) : await usersService.register(user as IUser);
       if (loggedUser) {
         setTokens(loggedUser.accessToken!!, loggedUser.refreshToken!!);
+        setUser(loggedUser);
         navigate("/home");
       }
     } catch (error: any) {
@@ -61,7 +56,7 @@ export const LoginPage: React.FC<{}> = () => {
   return (
     <>
       <StyledLogin>
-        <StyledLoginCard>
+        <StyledLoginCard elevation={10}>
           <Tabs value={currTab} onChange={handleChange}>
             <Tab label={LOGIN_TEXTS.LOGIN} />
             <Tab label={LOGIN_TEXTS.REGISTER} />
@@ -72,16 +67,12 @@ export const LoginPage: React.FC<{}> = () => {
               <Controller
                 name="userName"
                 control={control}
-                render={({ field }) => (
-                  <TextField label="userName" {...field} />
-                )}
+                render={({ field }) => <TextField label="userName" {...field} />}
               />
               <Controller
                 name="password"
                 control={control}
-                render={({ field }) => (
-                  <TextField type="password" label="password" {...field} />
-                )}
+                render={({ field }) => <TextField type="password" label="password" {...field} />}
               />
               <Button type="submit" variant="contained">
                 {isLogin ? LOGIN_TEXTS.LOGIN : LOGIN_TEXTS.REGISTER}

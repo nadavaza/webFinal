@@ -2,8 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import { Model } from "mongoose";
 
 interface populationField {
-  path: string
-  select: string
+  path: string;
+  select: string;
 }
 
 /* istanbul ignore next */
@@ -18,7 +18,7 @@ class BaseController<T> {
       try {
         await controller.getAll(req, res, filterField, populationFields);
       } catch (error) {
-        next(error); // Pass errors to Express error handler
+        next(error);
       }
     };
   }
@@ -31,10 +31,10 @@ class BaseController<T> {
         query = query.where(filterField).equals(filterValue);
       }
       if (populationFields && populationFields.length > 0) {
-        populationFields.forEach(field => {
-          if (field.select != '') query.populate({ path: field.path, select: field.select });
+        populationFields.forEach((field) => {
+          if (field.select != "") query.populate({ path: field.path, select: field.select });
           else query = query.populate(field);
-        })
+        });
         query = query.populate(populationFields);
       }
       const items = await query;
