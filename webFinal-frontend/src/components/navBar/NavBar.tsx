@@ -8,13 +8,13 @@ import usersService from "../../services/users-service";
 import { HOME_TEXTS } from "../../consts/homeConsts";
 import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { useStore } from "../../store/store";
+import { useUserStore } from "../../store/userStore";
 import nbaLogo from "../../assets/nbaLogo.png";
 
 export const NavBar: React.FC<{}> = ({}) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user } = useStore();
+  const { user } = useUserStore();
 
   const logOut = async () => {
     try {

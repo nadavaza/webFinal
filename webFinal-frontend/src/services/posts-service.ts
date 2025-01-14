@@ -24,6 +24,40 @@ class PostsService {
       throw error;
     }
   }
+  async getPostById(postId: string) {
+    try {
+      return (
+        await apiClient.get<IPost>(`/posts/${postId}`, {
+          headers: { Authorization: `JWT ${getTokens().accessToken}` },
+        })
+      ).data;
+    } catch (error: any) {
+      throw error;
+    }
+  }
+  async addPost(newPost: IPost, userId: string) {
+    try {
+      return (
+        await apiClient.post<IPost>("/posts", newPost, {
+          headers: { Authorization: `JWT ${getTokens().accessToken}` },
+          params: { userId },
+        })
+      ).data;
+    } catch (error: any) {
+      throw error;
+    }
+  }
+  async deletePost(postId: string) {
+    try {
+      return (
+        await apiClient.delete(`/posts/${postId}`, {
+          headers: { Authorization: `JWT ${getTokens().accessToken}` },
+        })
+      ).data;
+    } catch (error: any) {
+      throw error;
+    }
+  }
 }
 
 export default new PostsService();

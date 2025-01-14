@@ -4,7 +4,6 @@ import styled from "styled-components";
 export const StyledNavBar = styled(Card)(() => ({
   position: "relative",
   height: "4rem",
-  marginBottom: "2rem",
   display: "flex",
   alignItems: "center",
   width: "100%",

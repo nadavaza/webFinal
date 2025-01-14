@@ -9,7 +9,7 @@ import { IUser } from "../../types/users.types";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router";
 import { setTokens } from "../../services/token-service";
-import { useStore } from "../../store/store";
+import { useUserStore } from "../../store/userStore";
 
 interface IFormFields {
   userName: string;
@@ -26,7 +26,7 @@ export const LoginPage: React.FC<{}> = () => {
       password: "",
     },
   });
-  const { setUser } = useStore();
+  const { setUser } = useUserStore();
 
   const onSubmit = handleSubmit(async (user: IFormFields) => {
     try {

@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { Model } from "mongoose";
+import posts_controller from "./posts_controller";
 
 interface populationField {
   path: string;

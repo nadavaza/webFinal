@@ -59,7 +59,11 @@ const router = express.Router();
  *       500:
  *         description: Server error
  */
-router.get("/", authMiddleware, commentsController.getAllHandler(commentsController, 'owner', [{ path: 'owner', select: '' }]));
+router.get(
+  "/",
+  authMiddleware,
+  commentsController.getAllHandler(commentsController, "owner", [{ path: "owner", select: "" }])
+);
 
 /**
  * @swagger

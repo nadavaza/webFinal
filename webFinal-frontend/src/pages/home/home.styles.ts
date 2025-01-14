@@ -5,6 +5,7 @@ export const StyledHome = styled("div")(() => ({
   flexDirection: "column",
   alignItems: "center",
   gap: "1rem",
+  height: "100%",
 }));
 
 export const StyledLogo = styled("img")(() => ({

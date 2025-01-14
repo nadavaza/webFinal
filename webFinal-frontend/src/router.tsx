@@ -1,5 +1,6 @@
 import { Home } from "./pages/home/Home";
 import { LoginPage } from "./pages/loginPage/LoginPage";
+import { PostPage } from "./pages/postPage/PostPage";
 import { Profile } from "./pages/profile/Profile";
 
 export const routes = [
@@ -14,5 +15,9 @@ export const routes = [
   {
     path: "/profile",
     component: Profile,
+  },
+  {
+    path: "/post/:id",
+    component: PostPage,
   },
 ];

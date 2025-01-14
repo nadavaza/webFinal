@@ -28,3 +28,12 @@ export const StyledProfileIcon = styled(PersonIcon)(() => ({
   height: "8rem !important",
   width: "8rem !important",
 }));
+
+export const StyledPostsContainer = styled("div")(() => ({
+  height: "90%",
+  width: "90%",
+  display: "flex",
+  gap: "1rem",
+  flexWrap: "wrap",
+  marginBottom: "2rem",
+}));

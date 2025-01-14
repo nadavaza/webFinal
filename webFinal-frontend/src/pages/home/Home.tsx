@@ -5,12 +5,18 @@ import { Typography } from "@mui/material";
 import { HOME_TEXTS } from "../../consts/homeConsts";
 import { Post } from "../../components/post/Post";
 import nbaLogo from "../../assets/nbaLogo.png";
-import { StyledHome, StyledLogo } from "./home.styles";
-import { ToastContainer } from "react-toastify";
+import { StyledHome, StyledLogo, StyledPostsContainer } from "./home.styles";
+import { toast, ToastContainer } from "react-toastify";
 import { AddNewPost } from "../../components/addNewPost/AddNewPost";
+import { useUserStore } from "../../store/userStore";
+import { Loader } from "../../components/loader/Loader";
+import { useLoaderStore } from "../../store/loaderStore";
+import { PostsContainer } from "../../components/postsContainer/PostsContainer";
 
 export const Home: React.FC<{}> = () => {
   const [posts, setPosts] = useState<IPost[]>([]);
+  const { user } = useUserStore();
+  const { setIsloading } = useLoaderStore();
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -21,7 +27,16 @@ export const Home: React.FC<{}> = () => {
     fetchPosts();
   }, []);
 
-  const;
+  const addNewPost = async (newPost: IPost) => {
+    setIsloading(true);
+    try {
+      const addedPost = await postsService.addPost(newPost, user?._id);
+      setPosts([...posts, addedPost]);
+    } catch (error: any) {
+      toast(error.response.data, { position: "bottom-left", type: "error" });
+    }
+    setIsloading(false);
+  };
 
   return (
     <>
@@ -30,12 +45,8 @@ export const Home: React.FC<{}> = () => {
           {HOME_TEXTS.TITLE}
         </Typography>
         <StyledLogo src={nbaLogo} />
-        <div>
-          {posts.map((post, index) => (
-            <Post post={post} key={index} />
-          ))}
-        </div>
-        <AddNewPost />
+        <PostsContainer posts={posts} />
+        <AddNewPost onSave={addNewPost} />
       </StyledHome>
       <ToastContainer />
     </>

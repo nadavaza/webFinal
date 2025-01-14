@@ -7,7 +7,7 @@ interface IUserState {
   setUser: (user: IUser) => void;
 }
 
-export const useStore = create<IUserState>()(
+export const useUserStore = create<IUserState>()(
   devtools(
     (set) => ({
       user: { id: "", userName: "" },
