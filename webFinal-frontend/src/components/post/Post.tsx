@@ -13,9 +13,9 @@ import { useNavigate } from "react-router";
 import PersonIcon from "@mui/icons-material/Person";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-export const Post: React.FC<{ post: IPost; isProfile?: boolean; onDeletePost?: (postId: string) => void }> = ({
+export const Post: React.FC<{ post: IPost; isDeleteable?: boolean; onDeletePost?: (postId: string) => void }> = ({
   post,
-  isProfile,
+  isDeleteable,
   onDeletePost,
 }) => {
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ export const Post: React.FC<{ post: IPost; isProfile?: boolean; onDeletePost?: (
         </StyledPostOwner>
 
         <StyledActions>
-          {isProfile && (
+          {isDeleteable && (
             <IconButton onClick={handleDeleteClick}>
               <DeleteIcon />
             </IconButton>

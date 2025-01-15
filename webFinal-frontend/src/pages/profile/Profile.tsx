@@ -51,7 +51,7 @@ export const Profile: React.FC<{}> = ({}) => {
           </IconButton>
         </StyledProfileCard>
         <Typography variant="h2">{PROFILE_TEXTS.MY_POSTS}</Typography>
-        <PostsContainer posts={userPosts} isProfile onDeletePost={deletePost} />
+        <PostsContainer posts={userPosts} isDeleteable onDeletePost={deletePost} />
       </StyledProfile>
       <ConfirmToast
         toastText={PROFILE_TEXTS.CONFIRM_DELETE}

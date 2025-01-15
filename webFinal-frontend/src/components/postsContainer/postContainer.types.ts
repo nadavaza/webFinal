@@ -2,6 +2,6 @@ import { IPost } from "../../types/posts.types";
 
 export interface IPostsContainer {
   posts: IPost[];
-  isProfile?: boolean;
+  isDeleteable?: boolean;
   onDeletePost?: (postId: string) => void;
 }

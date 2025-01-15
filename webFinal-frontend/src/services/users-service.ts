@@ -23,6 +23,13 @@ class UsersService {
       throw error;
     }
   }
+  async refresh(refreshToken: string) {
+    try {
+      return (await apiClient.post<IUser>("/auth/refresh", { refreshToken })).data;
+    } catch (error: any) {
+      throw error;
+    }
+  }
 }
 
 export default new UsersService();

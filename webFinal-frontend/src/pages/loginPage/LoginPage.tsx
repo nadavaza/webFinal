@@ -1,5 +1,5 @@
 import { Button, Stack, Tab, Tabs, TextField } from "@mui/material";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { LOGIN_TEXTS } from "../../consts/loginConsts";
 import { StyledLogin, StyledLoginCard } from "./login.styles";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
@@ -8,7 +8,7 @@ import usersService from "../../services/users-service";
 import { IUser } from "../../types/users.types";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router";
-import { setTokens } from "../../services/token-service";
+import { getTokens, setTokens } from "../../services/token-service";
 import { useUserStore } from "../../store/userStore";
 
 interface IFormFields {

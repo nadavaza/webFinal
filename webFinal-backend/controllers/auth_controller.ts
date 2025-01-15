@@ -203,9 +203,10 @@ const refresh = async (req: Request, res: Response) => {
     user.refreshToken.push(tokens.refreshToken);
     await user.save();
     res.status(200).send({
+      _id: user._id,
+      userName: user.userName,
       accessToken: tokens.accessToken,
       refreshToken: tokens.refreshToken,
-      _id: user._id,
     });
   } catch (err) {
     res.status(400).send("fail");

@@ -1,12 +1,12 @@
 import React, { useMemo, useState } from "react";
 import { IPostsContainer } from "./postContainer.types";
-import { StyledPostsContainer } from "./postsContainer.styles";
+import { StyledPostsContainer, StyledPostsNavigation } from "./postsContainer.styles";
 import { Post } from "../post/Post";
 import { Pagination } from "@mui/material";
 
 const maxPostsPerPage = 8;
 
-export const PostsContainer: React.FC<IPostsContainer> = ({ posts, isProfile, onDeletePost }) => {
+export const PostsContainer: React.FC<IPostsContainer> = ({ posts, isDeleteable, onDeletePost }) => {
   const [page, setPage] = useState(1);
 
   const currentPosts = useMemo(() => {
@@ -21,15 +21,15 @@ export const PostsContainer: React.FC<IPostsContainer> = ({ posts, isProfile, on
     <>
       <StyledPostsContainer>
         {currentPosts.map((post, index) => (
-          <Post post={post} isProfile={isProfile} key={index} onDeletePost={onDeletePost} />
+          <Post post={post} isDeleteable={isDeleteable} key={index} onDeletePost={onDeletePost} />
         ))}
+        <StyledPostsNavigation
+          count={Math.ceil(posts.length / maxPostsPerPage)}
+          page={page}
+          onChange={handlePageChange}
+          color="secondary"
+        />
       </StyledPostsContainer>
-      <Pagination
-        count={Math.ceil(posts.length / maxPostsPerPage)}
-        page={page}
-        onChange={handlePageChange}
-        color="secondary"
-      />
     </>
   );
 };
