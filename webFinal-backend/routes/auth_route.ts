@@ -1,6 +1,7 @@
 import express from "express";
 const router = express.Router();
 import authController from "../controllers/auth_controller";
+import { authMiddleware } from "./../controllers/auth_controller";
 
 /**
  * @swagger
@@ -100,6 +101,8 @@ router.post("/register", authController.register);
  */
 router.post("/login", authController.login);
 
+router.post("/googleSignin", authController.googleSignin);
+
 /**
  * @swagger
  * /auth/refresh:
@@ -166,5 +169,27 @@ router.post("/refresh", authController.refresh);
  *         description: Server error
  */
 router.post("/logout", authController.logout);
+
+/**
+ * @swagger
+ * /auth/edit:
+ *   post:
+ *     summary: edit a user
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       200:
+ *         description: The edited user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ */
+router.put("/edit", authMiddleware, authController.editUserDetails);
 
 export default router;

@@ -1,7 +1,7 @@
 import "./App.css";
 import { Navigate, Route, Routes, useNavigate } from "react-router";
 import { routes } from "./router";
-import { createTheme, ThemeProvider } from "@mui/material";
+import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { NavBar } from "./components/navBar/NavBar";
 import { Loader } from "./components/loader/Loader";
@@ -14,8 +14,9 @@ import { useUserStore } from "./store/userStore";
 
 const theme = createTheme({
   palette: {
-    primary: { main: "#c1121f" },
-    secondary: { main: "#2196f3" },
+    primary: { main: "#780000" },
+    secondary: { main: "#669BBC" },
+    background: { default: "#FDF0D5", paper: "#ffffff" },
   },
 });
 
@@ -38,7 +39,7 @@ function App() {
       } catch (error: any) {
         // setTokens("", "");
         // navigate("/login");
-        toast(error.response.data, { position: "bottom-left", type: "error" });
+        toast(error.response.data, { position: "bottom-center", type: "error", delay: 500, theme: "colored" });
       }
     };
     refreshUser();
@@ -47,8 +48,9 @@ function App() {
   return (
     <>
       <ThemeProvider theme={theme}>
-        <GoogleOAuthProvider clientId="asds">
+        <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
           <Loader isLoading={isLoading} />
+          <CssBaseline />
           <NavBar />
           <Routes>
             <Route path="/" element={<Navigate to="/login" />} />

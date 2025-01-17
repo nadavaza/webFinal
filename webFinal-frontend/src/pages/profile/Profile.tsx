@@ -1,20 +1,59 @@
-import { IconButton, Typography } from "@mui/material";
 import { StyledProfile, StyledProfileCard, StyledProfileIcon, StyledProfileImg } from "./profile.styles";
 import { useUserStore } from "../../store/userStore";
-import EditIcon from "@mui/icons-material/Edit";
 import { PROFILE_TEXTS } from "../../consts/profileConsts";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { IPost } from "../../types/posts.types";
 import postsService from "../../services/posts-service";
 import { PostsContainer } from "../../components/postsContainer/PostsContainer";
-import { ConfirmToast } from "react-confirm-toast";
 import { toast, ToastContainer } from "react-toastify";
+import { IUser } from "../../types/users.types";
+import { Controller, useForm } from "react-hook-form";
+import { Button, Stack, TextField } from "@mui/material";
+import usersService from "../../services/users-service";
+import { useLoaderStore } from "../../store/loaderStore";
 
 export const Profile: React.FC<{}> = ({}) => {
-  const { user } = useUserStore();
+  const { user, setUser } = useUserStore();
   const [userPosts, setUserPosts] = useState<IPost[]>([]);
-  const [showConfirm, setShowConfirm] = useState<boolean>(false);
-  const [userPostsIdToDelete, setUserPostsIdToDelete] = useState<string>("");
+  const { setIsloading } = useLoaderStore();
+
+  const { control, handleSubmit } = useForm<IUser>({
+    defaultValues: {
+      userName: user.userName,
+      email: user.email,
+      password: "password",
+    },
+  });
+
+  const fields = useMemo(() => {
+    return Object.keys(control._defaultValues).map((field) => {
+      return (
+        <Controller
+          key={field}
+          name={field}
+          control={control}
+          render={({ field }) => (
+            <TextField
+              required
+              slotProps={
+                field.name === "password" || field.name === "email"
+                  ? {
+                      input: {
+                        readOnly: true,
+                      },
+                    }
+                  : {}
+              }
+              {...field}
+              label={field.name}
+              variant="outlined"
+              type={field.name === "password" ? "password" : "text"}
+            />
+          )}
+        />
+      );
+    });
+  }, []);
 
   useEffect(() => {
     const fetchUserPosts = async () => {
@@ -24,19 +63,22 @@ export const Profile: React.FC<{}> = ({}) => {
     fetchUserPosts();
   }, []);
 
-  const deletePost = (postId: string) => {
-    setUserPostsIdToDelete(postId);
-    setShowConfirm(true);
-  };
-
-  const confirmDelete = async () => {
+  const onSubmit = handleSubmit(async (editedUserFields: IUser) => {
     try {
-      await postsService.deletePost(userPostsIdToDelete);
-      setUserPosts(userPosts.filter((post) => post._id !== userPostsIdToDelete));
+      setIsloading(true);
+      const editedUser = await usersService.edituser(editedUserFields);
+      setUser({ ...user, userName: editedUser.userName });
+      toast(PROFILE_TEXTS.PROFILE_EDIT_SUCCESS, {
+        position: "bottom-center",
+        type: "success",
+        delay: 500,
+        theme: "colored",
+      });
     } catch (error: any) {
-      toast(error.response.data, { position: "bottom-left", type: "error" });
+      toast(error.response.data, { position: "bottom-center", type: "error", delay: 500, theme: "colored" });
     }
-  };
+    setIsloading(false);
+  });
 
   return (
     <>
@@ -45,22 +87,17 @@ export const Profile: React.FC<{}> = ({}) => {
           <StyledProfileImg>
             <StyledProfileIcon />
           </StyledProfileImg>
-          <Typography variant="h4">{user.userName}</Typography>
-          <IconButton>
-            <EditIcon />
-          </IconButton>
+          <form onSubmit={onSubmit}>
+            <Stack gap={4}>
+              {fields}
+              <Button type="submit" variant="contained">
+                {PROFILE_TEXTS.EDIT_PROFILE}
+              </Button>
+            </Stack>
+          </form>
         </StyledProfileCard>
-        <Typography variant="h2">{PROFILE_TEXTS.MY_POSTS}</Typography>
-        <PostsContainer posts={userPosts} isDeleteable onDeletePost={deletePost} />
+        <PostsContainer posts={userPosts} />
       </StyledProfile>
-      <ConfirmToast
-        toastText={PROFILE_TEXTS.CONFIRM_DELETE}
-        theme="snow"
-        asModal
-        customFunction={confirmDelete}
-        setShowConfirmToast={setShowConfirm}
-        showConfirmToast={showConfirm}
-      />
       <ToastContainer />
     </>
   );

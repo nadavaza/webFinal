@@ -3,32 +3,27 @@ import {
   StyledActions,
   StyledPostCard,
   StyledPostCardActions,
+  StyledPostComments,
   StyledPostContent,
+  StyledPostDate,
+  StyledPostLikes,
   StyledPostOwner,
 } from "./post.styles";
-import { Avatar, CardContent, Chip, IconButton, Typography } from "@mui/material";
+import { Avatar, CardContent, Chip, Typography } from "@mui/material";
 import { IPost } from "../../types/posts.types";
 import CommentIcon from "@mui/icons-material/Comment";
 import { useNavigate } from "react-router";
 import PersonIcon from "@mui/icons-material/Person";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { formatPostDate } from "../../utils/dateUtils";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 
-export const Post: React.FC<{ post: IPost; isDeleteable?: boolean; onDeletePost?: (postId: string) => void }> = ({
-  post,
-  isDeleteable,
-  onDeletePost,
-}) => {
+export const Post: React.FC<{
+  post: IPost;
+}> = ({ post }) => {
   const navigate = useNavigate();
 
   const goToPost = () => {
     navigate(`/post/${post._id}`);
-  };
-
-  const handleDeleteClick = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    if (onDeletePost) {
-      onDeletePost(post._id);
-    }
   };
 
   return (
@@ -36,10 +31,10 @@ export const Post: React.FC<{ post: IPost; isDeleteable?: boolean; onDeletePost?
       {/* <CardMedia></CardMedia> */}
       <CardContent>
         <StyledPostContent variant="h5" color="primary">
-          {post.title}
+          {post?.title}
         </StyledPostContent>
         <StyledPostContent variant="h6" color="secondary">
-          {post.content}
+          {post?.content}
         </StyledPostContent>
       </CardContent>
       <StyledPostCardActions>
@@ -49,15 +44,21 @@ export const Post: React.FC<{ post: IPost; isDeleteable?: boolean; onDeletePost?
         </StyledPostOwner>
 
         <StyledActions>
-          {isDeleteable && (
-            <IconButton onClick={handleDeleteClick}>
-              <DeleteIcon />
-            </IconButton>
-          )}
-          <Typography variant="h6" color="secondary">
-            {post?.comments?.length}
+          <StyledPostDate variant="body2" color="secondary">
+            {formatPostDate(post?.date)}
+          </StyledPostDate>
+          <StyledPostComments>
+            <Typography variant="h6" color="secondary">
+              {post?.comments?.length}
+            </Typography>
             <CommentIcon color="secondary" />
-          </Typography>
+          </StyledPostComments>
+          <StyledPostLikes>
+            <Typography variant="h6" color="secondary">
+              {post?.likes?.length}
+            </Typography>
+            <ThumbUpIcon color="secondary" />
+          </StyledPostLikes>
         </StyledActions>
       </StyledPostCardActions>
     </StyledPostCard>

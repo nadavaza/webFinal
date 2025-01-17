@@ -64,8 +64,8 @@ router.get(
   authMiddleware,
   postsController.getAllHandler(postsController, "owner", [
     { path: "owner", select: "userName" },
-    { path: "comments", select: "" },
-    // { path: 'comments.owner', select: 'userName' }
+    { path: "comments", select: "owner" },
+    { path: "likes", select: "" },
   ])
 );
 
@@ -96,7 +96,15 @@ router.get(
  *       500:
  *         description: Server error
  */
-router.get("/:id", authMiddleware, postsController.getById.bind(postsController));
+router.get(
+  "/:id",
+  authMiddleware,
+  postsController.getByIdHandler(postsController, [
+    { path: "owner", select: "userName" },
+    { path: "comments", select: "owner" },
+    { path: "likes", select: "userName" },
+  ])
+);
 
 /**
  * @swagger
@@ -168,5 +176,7 @@ router.post("/", authMiddleware, postsController.create.bind(postsController));
  *         description: Server error
  */
 router.delete("/:id", authMiddleware, postsController.deleteItem.bind(postsController));
+
+router.post("/likePost/:id", authMiddleware, postsController.likePost.bind(postsController));
 
 export default router;

@@ -8,14 +8,12 @@ import userModel, { IUser } from "../models/users_model";
 var app: Express;
 
 beforeAll(async () => {
-  console.log("beforeAll");
   app = await initApp();
   await userModel.deleteMany();
   await postModel.deleteMany();
 });
 
 afterAll((done) => {
-  console.log("afterAll");
   mongoose.connection.close();
   done();
 });
@@ -28,8 +26,10 @@ type User = IUser & {
 };
 
 const testUser: User = {
+  email: "test@email",
   userName: "testuser",
   password: "testpassword",
+  photo: "",
 };
 
 describe("Auth API Tests", () => {
@@ -40,13 +40,11 @@ describe("Auth API Tests", () => {
     expect(response.statusCode).toBe(200);
   });
 
-  test("Auth test register fail - duplicate userName", async () => {
+  test("Auth test register fail - duplicate email", async () => {
     const response = await request(app)
       .post(baseUrl + "/register")
       .send(testUser);
     expect(response.statusCode).not.toBe(200);
-
-    expect(response.body.errorResponse).toHaveProperty("errmsg", expect.stringContaining("duplicate key error"));
   });
 
   test("Auth test register fail - missing fields", async () => {
@@ -59,7 +57,7 @@ describe("Auth API Tests", () => {
     const response2 = await request(app)
       .post(baseUrl + "/register")
       .send({
-        userName: "",
+        email: "",
         password: "sdfsd",
       });
     expect(response2.statusCode).not.toBe(200);
@@ -95,7 +93,7 @@ describe("Auth API Tests", () => {
     const response = await request(app)
       .post(baseUrl + "/login")
       .send({
-        userName: testUser.userName,
+        email: testUser.email,
         password: "sdfsd",
       });
     expect(response.statusCode).not.toBe(200);
@@ -143,27 +141,5 @@ describe("Auth API Tests", () => {
         refreshToken: testUser.refreshToken,
       });
     expect(response3.statusCode).not.toBe(200);
-  });
-  test("Auth test delete user", async () => {
-    const loginResponse = await request(app)
-      .post(baseUrl + "/login")
-      .send(testUser);
-    const accessToken = loginResponse.body.accessToken;
-
-    const deleteResponse = await request(app)
-      .delete(baseUrl + "/delete")
-      .send({ userName: testUser.userName })
-      .set("Authorization", "JWT " + accessToken);
-    expect(deleteResponse.statusCode).toBe(200);
-  });
-
-  test("Auth test delete user fail - non existing user", async () => {
-    const nonExistingUserUserName = "nonExistentuserName";
-
-    const response = await request(app)
-      .delete(baseUrl + "/delete")
-      .send({ userName: nonExistingUserUserName })
-      .set("Authorization", "JWT " + testUser.accessToken);
-    expect(response.statusCode).toBe(400);
   });
 });

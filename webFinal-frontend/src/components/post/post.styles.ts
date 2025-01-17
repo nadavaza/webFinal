@@ -34,3 +34,19 @@ export const StyledActions = styled("div")(() => ({
   alignItems: "center",
   gap: ".2rem",
 }));
+
+export const StyledPostDate = styled(Typography)(() => ({
+  padding: "1rem",
+}));
+
+export const StyledPostComments = styled("div")(() => ({
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+}));
+
+export const StyledPostLikes = styled("div")(() => ({
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+}));

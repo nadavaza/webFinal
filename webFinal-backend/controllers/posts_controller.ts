@@ -28,6 +28,34 @@ class PostsController extends BaseController<IPost> {
     super.create(req, res);
   }
 
+  async likePost(req: Request, res: Response) {
+    const postId = req.params.id;
+    const userId = req.body.userId;
+
+    try {
+      const post = await postModel.findById(postId);
+      if (!post) {
+        res.status(400).send("post not found");
+        return;
+      }
+
+      const likeIndex = post.likes.indexOf(userId);
+
+      if (likeIndex === -1) {
+        post.likes.push(userId);
+      } else {
+        post.likes.splice(likeIndex, 1);
+      }
+
+      await post.save();
+      res.status(200).send({
+        isLiked: likeIndex === -1,
+      });
+    } catch (error) {
+      res.status(400).send(error);
+    }
+  }
+
   // async getAiGeneratedPosts() {
   //   const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 

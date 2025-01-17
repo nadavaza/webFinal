@@ -45,16 +45,33 @@ class BaseController<T> {
     }
   }
 
-  async getById(req: Request, res: Response) {
-    const id = req.params.id;
-
-    try {
-      const item = await this.model.findById(id);
-      if (item != null) {
-        res.send(item);
-      } else {
-        res.status(404).send("not found");
+  getByIdHandler(controller: any, populationFields: populationField[]) {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        await controller.getById(req, res, populationFields);
+      } catch (error) {
+        next(error);
       }
+    };
+  }
+
+  async getById(req: Request, res: Response, populationFields: populationField[]) {
+    const id = req.params.id;
+    try {
+      let query = this.model.findById(id);
+
+      if (populationFields && populationFields.length > 0) {
+        populationFields.forEach((field) => {
+          if (field.select !== "") {
+            query = query.populate({ path: field.path, select: field.select });
+          } else {
+            query = query.populate(field);
+          }
+        });
+      }
+
+      const item = await query;
+      res.send(item);
     } catch (error) {
       res.status(400).send(error);
     }

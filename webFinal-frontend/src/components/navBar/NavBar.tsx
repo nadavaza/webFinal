@@ -23,7 +23,7 @@ export const NavBar: React.FC<{}> = ({}) => {
       setTokens("", "");
       navigate("/login");
     } catch (error: any) {
-      toast(error.response.data, { position: "bottom-left", type: "error" });
+      toast(error.response.data, { position: "bottom-center", type: "error", delay: 500, theme: "colored" });
     }
   };
 
@@ -38,7 +38,7 @@ export const NavBar: React.FC<{}> = ({}) => {
   if (location.pathname === "/login") {
     return (
       <>
-        <StyledNavBar elevation={5}>
+        <StyledNavBar elevation={3}>
           <StyledLogo src={nbaLogo} />
           <Typography color="primary" variant="h5">
             {HOME_TEXTS.TITLE}
@@ -49,7 +49,7 @@ export const NavBar: React.FC<{}> = ({}) => {
   }
 
   return (
-    <StyledNavBar elevation={5}>
+    <StyledNavBar elevation={3}>
       <StyledLogo src={nbaLogo} onClick={goToHome} />
       <Typography color="primary" variant="h5">
         {HOME_TEXTS.TITLE}
@@ -61,10 +61,10 @@ export const NavBar: React.FC<{}> = ({}) => {
         <Typography variant="h6" color="secondary">
           {user.userName}
         </Typography>
+        <Button onClick={logOut}>
+          {HOME_TEXTS.LOG_OUT} <LogoutIcon />
+        </Button>
       </StyledProfile>
-      <Button onClick={logOut}>
-        {HOME_TEXTS.LOG_OUT} <LogoutIcon />
-      </Button>
     </StyledNavBar>
   );
 };

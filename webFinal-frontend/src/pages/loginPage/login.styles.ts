@@ -8,10 +8,11 @@ export const StyledLogin = styled("div")(() => ({
   marginTop: "4rem",
 }));
 
-export const StyledLoginCard = styled(Card)(() => ({
+export const StyledLoginCard = styled("div")(() => ({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
   flexDirection: "column",
   padding: "2rem",
+  width: "50%",
 }));

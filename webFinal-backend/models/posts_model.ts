@@ -1,10 +1,12 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 export interface IPost {
   title: string;
   content: string;
-  owner: string;
+  owner: Schema.Types.ObjectId;
   photo: string;
+  date: Date;
+  likes: Schema.Types.ObjectId[];
 }
 
 const postSchema = new mongoose.Schema<IPost>(
@@ -15,13 +17,23 @@ const postSchema = new mongoose.Schema<IPost>(
     },
     content: String,
     owner: {
-      type: String,
+      type: Schema.Types.ObjectId,
       ref: "Users",
       required: true,
     },
     photo: {
       type: String,
     },
+    date: {
+      type: Date,
+      default: Date.now,
+    },
+    likes: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Users",
+      },
+    ],
   },
   { toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );

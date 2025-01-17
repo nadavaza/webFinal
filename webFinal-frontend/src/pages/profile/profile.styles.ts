@@ -15,6 +15,8 @@ export const StyledProfileCard = styled(Card)(() => ({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
+  flexDirection: "column",
+  gap: "1rem",
   padding: "2rem",
 }));
 

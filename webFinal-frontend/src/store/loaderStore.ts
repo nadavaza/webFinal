@@ -10,7 +10,15 @@ export const useLoaderStore = create<ILoaderState>()(
   devtools(
     (set) => ({
       isLoading: false,
-      setIsloading: (loadingStatus: boolean) => set({ isLoading: loadingStatus }),
+      setIsloading: (loadingStatus: boolean) => {
+        if (!loadingStatus) {
+          setTimeout(function () {
+            set({ isLoading: loadingStatus });
+          }, 500);
+        } else {
+          set({ isLoading: loadingStatus });
+        }
+      },
     }),
     { name: "loaderStore" }
   )

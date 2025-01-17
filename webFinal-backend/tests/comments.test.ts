@@ -11,13 +11,18 @@ var app: Express;
 type User = IUser & { token?: string };
 const testUser: User = {
   password: "testpassword",
+  email: "test@email",
   userName: "testuser",
+  photo: "",
 };
 
 const testPost: IPost = {
   title: "Test Post",
   content: "This is a test post content",
   owner: "testuser",
+  photo: "",
+  date: new Date(),
+  likes: [],
 };
 
 const testComment: IComments = {} as IComments;

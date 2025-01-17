@@ -1,12 +1,13 @@
-import { Button, Card } from "@mui/material";
+import { Card, Paper } from "@mui/material";
 import styled from "styled-components";
 
-export const StyledNavBar = styled(Card)(() => ({
+export const StyledNavBar = styled(Card)(({ theme }) => ({
   position: "relative",
   height: "4rem",
   display: "flex",
   alignItems: "center",
   width: "100%",
+  backgroundColor: "#FDF0D5 !important",
 }));
 
 export const StyledProfile = styled("div")(() => ({
@@ -16,7 +17,8 @@ export const StyledProfile = styled("div")(() => ({
   ":hover": {
     cursor: "pointer",
   },
-  margin: "0 auto",
+  position: "absolute",
+  right: "0",
 }));
 
 export const StyledLogo = styled("img")(() => ({

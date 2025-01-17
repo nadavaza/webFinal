@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 export interface IUser {
   userName: string;
+  email: string;
   password: string;
   _id?: string;
   refreshToken?: string[];
@@ -10,6 +11,10 @@ export interface IUser {
 
 const userSchema = new mongoose.Schema<IUser>({
   userName: {
+    type: String,
+    required: true,
+  },
+  email: {
     type: String,
     required: true,
     unique: true,

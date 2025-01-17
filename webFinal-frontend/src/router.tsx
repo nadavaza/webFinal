@@ -17,7 +17,7 @@ export const routes = [
     component: Profile,
   },
   {
-    path: "/post/:id",
+    path: "/post/:postId",
     component: PostPage,
   },
 ];

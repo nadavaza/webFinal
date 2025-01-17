@@ -91,7 +91,11 @@ router.get(
  *       500:
  *         description: Server error
  */
-router.get("/:id", authMiddleware, commentsController.getById.bind(commentsController));
+router.get(
+  "/:id",
+  authMiddleware,
+  commentsController.getByIdHandler(commentsController, [{ path: "owner", select: "" }])
+);
 
 /**
  * @swagger

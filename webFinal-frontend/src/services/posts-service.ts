@@ -58,6 +58,21 @@ class PostsService {
       throw error;
     }
   }
+  async likePost(postId: string, userId: string) {
+    try {
+      return (
+        await apiClient.post<any>(
+          `/posts/likePost/${postId}`,
+          { userId },
+          {
+            headers: { Authorization: `JWT ${getTokens().accessToken}` },
+          }
+        )
+      ).data;
+    } catch (error: any) {
+      throw error;
+    }
+  }
 }
 
 export default new PostsService();

@@ -1,5 +1,7 @@
 export interface IComment {
-    content: string;
-    owner: string;
-    postId: string;
+  _id: string;
+  content: string;
+  owner: string;
+  date: string;
+  postId: string;
 }

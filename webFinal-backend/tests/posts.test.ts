@@ -9,12 +9,13 @@ var app: Express;
 
 type User = IUser & { token?: string };
 const testUser: User = {
-  password: "testpassword",
   userName: "testuser",
+  email: "test@email",
+  password: "testpassword",
+  photo: "",
 };
 
 beforeAll(async () => {
-  console.log("beforeAll");
   app = await initApp();
   await postModel.deleteMany();
 
@@ -27,7 +28,6 @@ beforeAll(async () => {
 });
 
 afterAll((done) => {
-  console.log("afterAll");
   mongoose.connection.close();
   done();
 });
@@ -35,7 +35,9 @@ afterAll((done) => {
 let postId = "";
 describe("Posts Tests", () => {
   test("Posts test get all", async () => {
-    const response = await request(app).get("/posts");
+    const response = await request(app)
+      .get("/posts")
+      .set("Authorization", "JWT " + testUser.token);
     expect(response.statusCode).toBe(200);
     expect(response.body.length).toBe(0);
   });
@@ -47,7 +49,7 @@ describe("Posts Tests", () => {
       .send({
         title: "Test Post",
         content: "Test Content",
-        owner: "TestOwner",
+        owner: testUser._id,
       });
     expect(response.statusCode).toBe(201);
     expect(response.body.title).toBe("Test Post");
@@ -56,7 +58,9 @@ describe("Posts Tests", () => {
   });
 
   test("Test get post by id", async () => {
-    const response = await request(app).get("/posts/" + postId);
+    const response = await request(app)
+      .get("/posts/" + postId)
+      .set({ authorization: "JWT " + testUser.token });
     expect(response.statusCode).toBe(200);
     expect(response.body.title).toBe("Test Post");
     expect(response.body.content).toBe("Test Content");
@@ -69,13 +73,15 @@ describe("Posts Tests", () => {
       .send({
         title: "Test Post 2",
         content: "Test Content 2",
-        owner: "TestOwner2",
+        owner: testUser._id,
       });
     expect(response.statusCode).toBe(201);
   });
 
   test("Posts test get all 2", async () => {
-    const response = await request(app).get("/posts");
+    const response = await request(app)
+      .get("/posts")
+      .set({ authorization: "JWT " + testUser.token });
     expect(response.statusCode).toBe(200);
     expect(response.body.length).toBe(2);
   });
@@ -85,7 +91,9 @@ describe("Posts Tests", () => {
       .delete("/posts/" + postId)
       .set({ authorization: "JWT " + testUser.token });
     expect(response.statusCode).toBe(200);
-    const response2 = await request(app).get("/posts/" + postId);
+    const response2 = await request(app)
+      .get("/posts/" + postId)
+      .set({ authorization: "JWT " + testUser.token });
     expect(response2.statusCode).toBe(404);
   });
 

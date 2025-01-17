@@ -37,7 +37,7 @@ export const AddNewPost: React.FC<IAddNewPost> = ({ onSave }) => {
       <StyledAddFab color="primary" onClick={handleOpen}>
         <AddIcon />
       </StyledAddFab>
-      <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
+      <Dialog open={open} onClose={handleClose} fullWidth>
         <DialogTitle>{ADD_NEW_POST_TEXTS.ADD_NEW_POST}</DialogTitle>
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogContent>
@@ -64,7 +64,7 @@ export const AddNewPost: React.FC<IAddNewPost> = ({ onSave }) => {
                 )}
               />
               <Controller
-                name="image"
+                name="photo"
                 control={control}
                 render={({ field }) => (
                   <Box>
