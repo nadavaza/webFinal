@@ -33,7 +33,7 @@ export const Post: React.FC<{
         <StyledPostContent variant="h5" color="primary">
           {post?.title}
         </StyledPostContent>
-        <StyledPostContent variant="h6" color="secondary">
+        <StyledPostContent variant="h6" color="primary">
           {post?.content}
         </StyledPostContent>
       </CardContent>
@@ -44,20 +44,20 @@ export const Post: React.FC<{
         </StyledPostOwner>
 
         <StyledActions>
-          <StyledPostDate variant="body2" color="secondary">
+          <StyledPostDate variant="body2" color="primary">
             {formatPostDate(post?.date)}
           </StyledPostDate>
           <StyledPostComments>
-            <Typography variant="h6" color="secondary">
+            <Typography variant="h6" color="primary">
               {post?.comments?.length}
             </Typography>
             <CommentIcon color="secondary" />
           </StyledPostComments>
           <StyledPostLikes>
-            <Typography variant="h6" color="secondary">
+            <Typography variant="h6" color="primary">
               {post?.likes?.length}
             </Typography>
-            <ThumbUpIcon color="secondary" />
+            <ThumbUpIcon color="primary" />
           </StyledPostLikes>
         </StyledActions>
       </StyledPostCardActions>

@@ -5,14 +5,20 @@ export const StyledLogin = styled("div")(() => ({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
+  flexDirection: "column",
   marginTop: "4rem",
 }));
 
-export const StyledLoginCard = styled("div")(() => ({
+export const StyledLoginLogo = styled("img")(() => ({
+  width: "5rem",
+  height: "5rem",
+  margin: "2rem",
+}));
+
+export const StyledLoginCard = styled(Card)(() => ({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
   flexDirection: "column",
   padding: "2rem",
-  width: "50%",
 }));

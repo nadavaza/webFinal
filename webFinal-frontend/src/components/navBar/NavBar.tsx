@@ -1,7 +1,7 @@
 import React from "react";
-import { Avatar, Button, Typography } from "@mui/material";
+import { AppBar, Avatar, Button, Toolbar, Typography } from "@mui/material";
 import { useNavigate, useLocation } from "react-router";
-import { StyledLogo, StyledNavBar, StyledProfile } from "./navBar.styles";
+import { StyledAppBar, StyledLogo, StyledNavBar, StyledProfile } from "./navBar.styles";
 import { toast } from "react-toastify";
 import { getTokens, setTokens } from "../../services/token-service";
 import usersService from "../../services/users-service";
@@ -38,33 +38,37 @@ export const NavBar: React.FC<{}> = ({}) => {
   if (location.pathname === "/login") {
     return (
       <>
-        <StyledNavBar elevation={3}>
-          <StyledLogo src={nbaLogo} />
-          <Typography color="primary" variant="h5">
-            {HOME_TEXTS.TITLE}
-          </Typography>
-        </StyledNavBar>
+        <StyledAppBar position="static">
+          <Toolbar>
+            <StyledLogo src={nbaLogo} />
+            <Typography color="primary" variant="h5">
+              {HOME_TEXTS.TITLE}
+            </Typography>
+          </Toolbar>
+        </StyledAppBar>
       </>
     );
   }
 
   return (
-    <StyledNavBar elevation={3}>
-      <StyledLogo src={nbaLogo} onClick={goToHome} />
-      <Typography color="primary" variant="h5">
-        {HOME_TEXTS.TITLE}
-      </Typography>
-      <StyledProfile onClick={goToProfile}>
-        <Avatar>
-          <PersonIcon />
-        </Avatar>
-        <Typography variant="h6" color="secondary">
-          {user.userName}
+    <StyledAppBar position="static">
+      <Toolbar>
+        <StyledLogo src={nbaLogo} onClick={goToHome} />
+        <Typography color="primary" variant="h5">
+          {HOME_TEXTS.TITLE}
         </Typography>
-        <Button onClick={logOut}>
-          {HOME_TEXTS.LOG_OUT} <LogoutIcon />
-        </Button>
-      </StyledProfile>
-    </StyledNavBar>
+        <StyledProfile onClick={goToProfile}>
+          <Avatar>
+            <PersonIcon />
+          </Avatar>
+          <Typography variant="h6" color="secondary">
+            {user.userName}
+          </Typography>
+          <Button onClick={logOut}>
+            {HOME_TEXTS.LOG_OUT} <LogoutIcon />
+          </Button>
+        </StyledProfile>
+      </Toolbar>
+    </StyledAppBar>
   );
 };

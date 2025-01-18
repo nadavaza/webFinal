@@ -4,7 +4,7 @@ export interface IComments {
   content: string;
   owner: Schema.Types.ObjectId;
   date: Date;
-  postId: Schema.Types.ObjectId;
+  postId: string;
 }
 
 const commentsSchema = new mongoose.Schema<IComments>({
@@ -22,7 +22,7 @@ const commentsSchema = new mongoose.Schema<IComments>({
     default: Date.now,
   },
   postId: {
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: "Posts",
     required: true,
   },

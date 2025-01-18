@@ -2,9 +2,10 @@ import { NextFunction, Request, Response } from "express";
 import { Model } from "mongoose";
 import posts_controller from "./posts_controller";
 
-interface populationField {
+interface IPopulationField {
   path: string;
   select: string;
+  populate?: IPopulationField;
 }
 
 /* istanbul ignore next */
@@ -14,7 +15,7 @@ class BaseController<T> {
     this.model = model;
   }
 
-  getAllHandler(controller: any, filterField: string, populationFields: populationField[]) {
+  getAllHandler(controller: any, filterField: string, populationFields: IPopulationField[]) {
     return async (req: Request, res: Response, next: NextFunction) => {
       try {
         await controller.getAll(req, res, filterField, populationFields);
@@ -24,7 +25,7 @@ class BaseController<T> {
     };
   }
 
-  async getAll(req: Request, res: Response, filterField: string, populationFields: populationField[]) {
+  async getAll(req: Request, res: Response, filterField: string, populationFields: IPopulationField[]) {
     const filterValue = req.query[filterField];
     try {
       let query = this.model.find();
@@ -33,10 +34,8 @@ class BaseController<T> {
       }
       if (populationFields && populationFields.length > 0) {
         populationFields.forEach((field) => {
-          if (field.select != "") query.populate({ path: field.path, select: field.select });
-          else query = query.populate(field);
+          query = query.populate(field);
         });
-        query = query.populate(populationFields);
       }
       const items = await query;
       res.send(items);
@@ -45,7 +44,7 @@ class BaseController<T> {
     }
   }
 
-  getByIdHandler(controller: any, populationFields: populationField[]) {
+  getByIdHandler(controller: any, populationFields: IPopulationField[]) {
     return async (req: Request, res: Response, next: NextFunction) => {
       try {
         await controller.getById(req, res, populationFields);
@@ -55,21 +54,16 @@ class BaseController<T> {
     };
   }
 
-  async getById(req: Request, res: Response, populationFields: populationField[]) {
+  async getById(req: Request, res: Response, populationFields: IPopulationField[]) {
     const id = req.params.id;
     try {
       let query = this.model.findById(id);
 
       if (populationFields && populationFields.length > 0) {
         populationFields.forEach((field) => {
-          if (field.select !== "") {
-            query = query.populate({ path: field.path, select: field.select });
-          } else {
-            query = query.populate(field);
-          }
+          query = query.populate(field);
         });
       }
-
       const item = await query;
       res.send(item);
     } catch (error) {

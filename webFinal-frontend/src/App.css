@@ -30,3 +30,8 @@ body,
 ::-webkit-scrollbar-thumb:hover {
   background-color: #a8bbbf;
 }
+
+.MuiCard-root:hover {
+  cursor: pointer;
+  scale: 1.05;
+}

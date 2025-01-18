@@ -57,3 +57,13 @@ export const StyledDeletePost = styled(IconButton)(() => ({
   position: "absolute !important",
   right: "0",
 }));
+
+export const StyledPostCommentsContainer = styled("div")(() => ({
+  width: "90%",
+  textAlign: "left",
+  position: "relative",
+  padding: "2rem",
+  display: "flex",
+  flexDirection: "column",
+  gap: "2rem",
+}));

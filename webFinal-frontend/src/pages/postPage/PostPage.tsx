@@ -6,6 +6,7 @@ import {
   StyledDeletePost,
   StyledPost,
   StyledPostComments,
+  StyledPostCommentsContainer,
   StyledPostContent,
   StyledPostContentTypography,
   StyledPostDetails,
@@ -25,6 +26,7 @@ import CommentIcon from "@mui/icons-material/Comment";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { useUserStore } from "../../store/userStore";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { Comment } from "../../components/comment/Comment";
 
 export const PostPage: React.FC<{}> = () => {
   const { postId } = useParams();
@@ -83,7 +85,7 @@ export const PostPage: React.FC<{}> = () => {
         <StyledPost>
           {user._id === post?.owner._id && (
             <StyledDeletePost onClick={deletePost}>
-              <DeleteIcon color="secondary" />
+              <DeleteIcon color="primary" />
             </StyledDeletePost>
           )}
           <StyledPostOwner>
@@ -96,31 +98,37 @@ export const PostPage: React.FC<{}> = () => {
             <Typography variant="h2" color="primary">
               {post?.title}
             </Typography>
-            <StyledPostContentTypography variant="h5" color="secondary">
+            <StyledPostContentTypography variant="h5" color="primary">
               {post?.content}
             </StyledPostContentTypography>
             <img src={post?.photo} alt="img" />
           </StyledPostContent>
           <StyledPostDetails>
-            <Typography variant="body1" color="secondary">
+            <Typography variant="body1" color="primary">
               {formatPostDate(post?.date)}
             </Typography>
             <StyledPostComments>
-              <Typography variant="body1" color="secondary">
+              <Typography variant="body1" color="primary">
                 {post?.comments?.length}
               </Typography>
-              <CommentIcon color="secondary" />
+              <CommentIcon color="primary" />
             </StyledPostComments>
             <StyledPostLikes>
-              <Typography variant="body1" color="secondary">
+              <Typography variant="body1" color="primary">
                 {post?.likes?.length}
               </Typography>
               <IconButton onClick={likePost}>
-                <ThumbUpIcon color={isPostLiked ? "success" : "secondary"} />
+                <ThumbUpIcon color={isPostLiked ? "success" : "primary"} />
               </IconButton>
             </StyledPostLikes>
           </StyledPostDetails>
         </StyledPost>
+
+        <StyledPostCommentsContainer>
+          {post?.comments.map((comment, index) => (
+            <Comment comment={comment} key={index} />
+          ))}
+        </StyledPostCommentsContainer>
       </StyledPostPage>
 
       <ConfirmToast

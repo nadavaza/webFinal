@@ -14,9 +14,9 @@ import { useUserStore } from "./store/userStore";
 
 const theme = createTheme({
   palette: {
-    primary: { main: "#780000" },
-    secondary: { main: "#669BBC" },
-    background: { default: "#FDF0D5", paper: "#ffffff" },
+    primary: { main: "#000000" },
+    secondary: { main: "#f5f5f5" },
+    background: { default: "#f6f6f6", paper: "#ffffff" },
   },
 });
 

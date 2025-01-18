@@ -1,7 +1,7 @@
 import { Button, Stack, Tab, Tabs, TextField } from "@mui/material";
 import React, { useEffect, useMemo } from "react";
 import { LOGIN_TEXTS } from "../../consts/loginConsts";
-import { StyledLogin, StyledLoginCard } from "./login.styles";
+import { StyledLogin, StyledLoginCard, StyledLoginLogo } from "./login.styles";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { Controller, useForm } from "react-hook-form";
 import usersService from "../../services/users-service";
@@ -10,6 +10,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router";
 import { getTokens, setTokens } from "../../services/token-service";
 import { useUserStore } from "../../store/userStore";
+import basketballLogo from "../../assets/basketball.png";
 
 export const LoginPage: React.FC<{}> = () => {
   const navigate = useNavigate();
@@ -80,6 +81,7 @@ export const LoginPage: React.FC<{}> = () => {
   return (
     <>
       <StyledLogin>
+        <StyledLoginLogo src={basketballLogo} />
         <StyledLoginCard>
           <Tabs value={currTab} onChange={handleChange}>
             <Tab label={LOGIN_TEXTS.LOGIN} />

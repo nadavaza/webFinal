@@ -101,7 +101,7 @@ router.get(
   authMiddleware,
   postsController.getByIdHandler(postsController, [
     { path: "owner", select: "userName" },
-    { path: "comments", select: "owner" },
+    { path: "comments", select: "", populate: { path: "owner", select: "" } },
     { path: "likes", select: "userName" },
   ])
 );
