@@ -5,6 +5,8 @@ export const StyledHome = styled("div")(() => ({
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
+  flexWrap: "wrap",
+  height: "100%",
 }));
 
 export const StyledLogo = styled("img")(() => ({

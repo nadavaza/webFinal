@@ -21,29 +21,25 @@ export const PostsContainer: React.FC<IPostsContainer> = ({ posts, isHome }) => 
 
   if (isHome) {
     return (
-      <>
-        <StyledPostsContainer>
-          <Post post={mainPost} />
-        </StyledPostsContainer>
-      </>
+      <StyledPostsContainer>
+        <Post post={mainPost} />
+      </StyledPostsContainer>
     );
   }
 
   return (
-    <>
-      <StyledPostsContainer>
-        {currentPosts.map((post, index) => (
-          <Post post={post} key={index} />
-        ))}
-        {currentPosts.length > 0 && (
-          <StyledPostsNavigation
-            count={Math.ceil(posts.length / maxPostsPerPage)}
-            page={page}
-            onChange={handlePageChange}
-            color="secondary"
-          />
-        )}
-      </StyledPostsContainer>
-    </>
+    <StyledPostsContainer>
+      {currentPosts.map((post, index) => (
+        <Post post={post} key={index} />
+      ))}
+      {currentPosts.length > 0 && (
+        <StyledPostsNavigation
+          count={Math.ceil(posts.length / maxPostsPerPage)}
+          page={page}
+          onChange={handlePageChange}
+          color="secondary"
+        />
+      )}
+    </StyledPostsContainer>
   );
 };

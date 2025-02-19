@@ -6,7 +6,6 @@ import {
   StyledDeletePost,
   StyledPost,
   StyledPostComments,
-  StyledPostCommentsContainer,
   StyledPostContent,
   StyledPostContentTypography,
   StyledPostDetails,
@@ -21,12 +20,12 @@ import { useNavigate } from "react-router";
 import { useLoaderStore } from "../../store/loaderStore";
 import { Avatar, IconButton, Typography } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
-import { formatPostDate } from "../../utils/dateUtils";
+import { formatDate } from "../../utils/dateUtils";
 import CommentIcon from "@mui/icons-material/Comment";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { useUserStore } from "../../store/userStore";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Comment } from "../../components/comment/Comment";
+import { CommentsContainer } from "../../components/commentsContainer/CommentsContainer";
 
 export const PostPage: React.FC<{}> = () => {
   const { postId } = useParams();
@@ -79,6 +78,10 @@ export const PostPage: React.FC<{}> = () => {
     }
   };
 
+  // const addComment = async (commentContent: string) => {
+  //   console.log(commentContent);
+  // };
+
   return (
     <>
       <StyledPostPage>
@@ -98,23 +101,23 @@ export const PostPage: React.FC<{}> = () => {
             <Typography variant="h2" color="primary">
               {post?.title}
             </Typography>
-            <StyledPostContentTypography variant="h5" color="primary">
+            <StyledPostContentTypography variant="h5" color="secondary">
               {post?.content}
             </StyledPostContentTypography>
             <img src={post?.photo} alt="img" />
           </StyledPostContent>
           <StyledPostDetails>
             <Typography variant="body1" color="primary">
-              {formatPostDate(post?.date)}
+              {formatDate(post?.date)}
             </Typography>
             <StyledPostComments>
-              <Typography variant="body1" color="primary">
+              <Typography variant="body1" color="secondary">
                 {post?.comments?.length}
               </Typography>
-              <CommentIcon color="primary" />
+              <CommentIcon color="secondary" />
             </StyledPostComments>
             <StyledPostLikes>
-              <Typography variant="body1" color="primary">
+              <Typography variant="body1" color={isPostLiked ? "success" : "primary"}>
                 {post?.likes?.length}
               </Typography>
               <IconButton onClick={likePost}>
@@ -123,12 +126,7 @@ export const PostPage: React.FC<{}> = () => {
             </StyledPostLikes>
           </StyledPostDetails>
         </StyledPost>
-
-        <StyledPostCommentsContainer>
-          {post?.comments.map((comment, index) => (
-            <Comment comment={comment} key={index} />
-          ))}
-        </StyledPostCommentsContainer>
+        <CommentsContainer comments={post?.comments} />
       </StyledPostPage>
 
       <ConfirmToast

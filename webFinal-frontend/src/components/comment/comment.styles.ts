@@ -1,4 +1,4 @@
-import { Box, Paper, TextField, Typography } from "@mui/material";
+import { Paper, TextField, Typography } from "@mui/material";
 import styled from "styled-components";
 
 export const StyledComment = styled("div")(() => ({
@@ -22,4 +22,9 @@ export const StyledCommentContentTypography = styled(Typography)(() => ({
 export const StyledCommentContentContainer = styled(Paper)(() => ({
   width: "80%",
   minHeight: "8rem",
+  padding: "1rem",
+}));
+
+export const StyledCommentContentTextField = styled(TextField)(() => ({
+  width: "100%",
 }));

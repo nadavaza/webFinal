@@ -14,7 +14,7 @@ import { IPost } from "../../types/posts.types";
 import CommentIcon from "@mui/icons-material/Comment";
 import { useNavigate } from "react-router";
 import PersonIcon from "@mui/icons-material/Person";
-import { formatPostDate } from "../../utils/dateUtils";
+import { formatDate } from "../../utils/dateUtils";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 
 export const Post: React.FC<{
@@ -33,22 +33,24 @@ export const Post: React.FC<{
         <StyledPostContent variant="h5" color="primary">
           {post?.title}
         </StyledPostContent>
-        <StyledPostContent variant="h6" color="primary">
+        <StyledPostContent variant="h6" color="secondary">
           {post?.content}
         </StyledPostContent>
       </CardContent>
       <StyledPostCardActions>
         <StyledPostOwner>
           <Avatar>{post?.owner?.photo ? "" : <PersonIcon />}</Avatar>
-          <Chip label={post?.owner?.userName} />
+          <Typography variant="body2" color="primary">
+            {post?.owner?.userName}
+          </Typography>
         </StyledPostOwner>
 
         <StyledActions>
           <StyledPostDate variant="body2" color="primary">
-            {formatPostDate(post?.date)}
+            {formatDate(post?.date)}
           </StyledPostDate>
           <StyledPostComments>
-            <Typography variant="h6" color="primary">
+            <Typography variant="h6" color="secondary">
               {post?.comments?.length}
             </Typography>
             <CommentIcon color="secondary" />

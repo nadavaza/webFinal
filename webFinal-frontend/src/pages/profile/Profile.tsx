@@ -35,15 +35,7 @@ export const Profile: React.FC<{}> = ({}) => {
           render={({ field }) => (
             <TextField
               required
-              slotProps={
-                field.name === "password" || field.name === "email"
-                  ? {
-                      input: {
-                        readOnly: true,
-                      },
-                    }
-                  : {}
-              }
+              disabled={field.name === "password" || field.name === "email"}
               {...field}
               label={field.name}
               variant="outlined"

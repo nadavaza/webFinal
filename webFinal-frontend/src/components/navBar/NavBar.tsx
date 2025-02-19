@@ -1,7 +1,7 @@
 import React from "react";
-import { AppBar, Avatar, Button, Toolbar, Typography } from "@mui/material";
+import { Avatar, Button, Toolbar, Typography } from "@mui/material";
 import { useNavigate, useLocation } from "react-router";
-import { StyledAppBar, StyledLogo, StyledNavBar, StyledProfile } from "./navBar.styles";
+import { StyledAppBar, StyledLogo, StyledProfile } from "./navBar.styles";
 import { toast } from "react-toastify";
 import { getTokens, setTokens } from "../../services/token-service";
 import usersService from "../../services/users-service";
@@ -38,7 +38,7 @@ export const NavBar: React.FC<{}> = ({}) => {
   if (location.pathname === "/login") {
     return (
       <>
-        <StyledAppBar position="static">
+        <StyledAppBar position="sticky">
           <Toolbar>
             <StyledLogo src={nbaLogo} />
             <Typography color="primary" variant="h5">
@@ -51,7 +51,7 @@ export const NavBar: React.FC<{}> = ({}) => {
   }
 
   return (
-    <StyledAppBar position="static">
+    <StyledAppBar position="sticky">
       <Toolbar>
         <StyledLogo src={nbaLogo} onClick={goToHome} />
         <Typography color="primary" variant="h5">
