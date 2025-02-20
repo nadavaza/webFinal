@@ -1,41 +1,21 @@
 import React, { useMemo, useState } from "react";
 import { IPostsContainer } from "./postContainer.types";
-import {
-  StyledPosts,
-  StyledPostsContainer,
-  StyledPostsNavigation,
-} from "./postsContainer.styles";
+import { StyledPosts, StyledPostsContainer, StyledPostsNavigation } from "./postsContainer.styles";
 import { Post } from "../post/Post";
 import { IPost } from "../../types/posts.types";
 
-const maxPostsPerPage = 4;
+const maxPostsPerPage = 6;
 
-export const PostsContainer: React.FC<IPostsContainer> = ({
-  posts,
-  isHome,
-}) => {
+export const PostsContainer: React.FC<IPostsContainer> = ({ posts }) => {
   const [page, setPage] = useState(1);
 
   const currentPosts = useMemo<IPost[]>(() => {
     return posts.slice((page - 1) * maxPostsPerPage, page * maxPostsPerPage);
   }, [posts, page]);
 
-  const mainPost = useMemo<IPost>(() => posts[0], [posts]);
-
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    value: number
-  ) => {
+  const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
   };
-
-  if (isHome) {
-    return (
-      <StyledPostsContainer>
-        <Post post={mainPost} />
-      </StyledPostsContainer>
-    );
-  }
 
   return (
     <StyledPostsContainer>

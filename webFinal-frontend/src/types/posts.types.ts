@@ -4,9 +4,9 @@ import { IUser } from "./users.types";
 export interface IPost {
   _id: string;
   title: string;
-  content: string;
+  content?: string;
   owner: IUser;
-  photo: string;
+  photo?: string;
   date: string;
   comments: IComment[];
   likes: IUser[];

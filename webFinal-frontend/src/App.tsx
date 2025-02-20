@@ -18,6 +18,7 @@ const theme = createTheme({
     secondary: { main: "#2657b8" },
     background: { default: "#ffffff", paper: "#ffffff" },
   },
+  typography: { fontFamily: "fantasy" },
 });
 
 function App() {

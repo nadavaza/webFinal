@@ -38,7 +38,7 @@ export const AddNewPost: React.FC<IAddNewPost> = ({ onSave }) => {
         <AddIcon />
       </StyledAddFab>
       <Dialog open={open} onClose={handleClose} fullWidth>
-        <DialogTitle>{ADD_NEW_POST_TEXTS.ADD_NEW_POST}</DialogTitle>
+        <DialogTitle color="primary">{ADD_NEW_POST_TEXTS.ADD_NEW_POST}</DialogTitle>
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogContent>
             <Stack gap={4}>
@@ -67,12 +67,10 @@ export const AddNewPost: React.FC<IAddNewPost> = ({ onSave }) => {
                 name="photo"
                 control={control}
                 render={({ field }) => (
-                  <Box>
-                    <Button variant="contained" component="label" fullWidth color="secondary">
-                      {ADD_NEW_POST_TEXTS.UPLOAD_IMAGE}
-                      <input type="file" hidden accept="image/*" onChange={(e) => field.onChange(e.target.files[0])} />
-                    </Button>
-                  </Box>
+                  <Button variant="contained" component="label" fullWidth color="secondary">
+                    {ADD_NEW_POST_TEXTS.UPLOAD_IMAGE}
+                    <input type="file" hidden accept="image/*" onChange={(e) => field.onChange(e.target.files[0])} />
+                  </Button>
                 )}
               />
             </Stack>

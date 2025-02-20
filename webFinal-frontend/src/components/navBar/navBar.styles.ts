@@ -22,4 +22,5 @@ export const StyledLogo = styled("img")(() => ({
 export const StyledAppBar = styled(AppBar)(() => ({
   backgroundColor: "white !important",
   zIndex: "10",
+  borderBottom: "1px solid gray",
 }));

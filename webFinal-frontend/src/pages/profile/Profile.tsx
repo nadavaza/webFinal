@@ -1,4 +1,5 @@
 import {
+  StyledPostsContainer,
   StyledProfile,
   StyledProfileCard,
   StyledProfileIcon,
@@ -6,7 +7,7 @@ import {
 } from "./profile.styles";
 import { useUserStore } from "../../store/userStore";
 import { PROFILE_TEXTS } from "../../consts/profileConsts";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { IPost } from "../../types/posts.types";
 import postsService from "../../services/posts-service";
 import { PostsContainer } from "../../components/postsContainer/PostsContainer";
@@ -16,6 +17,7 @@ import { Controller, useForm } from "react-hook-form";
 import { Button, Stack, TextField, Typography } from "@mui/material";
 import usersService from "../../services/users-service";
 import { useLoaderStore } from "../../store/loaderStore";
+import EditIcon from "@mui/icons-material/Edit";
 
 export const Profile: React.FC<{}> = ({}) => {
   const { user, setUser } = useUserStore();
@@ -25,32 +27,8 @@ export const Profile: React.FC<{}> = ({}) => {
   const { control, handleSubmit } = useForm<IUser>({
     defaultValues: {
       userName: user.userName,
-      email: user.email,
-      password: "password",
     },
   });
-
-  const fields = useMemo(() => {
-    return Object.keys(control._defaultValues).map((field) => {
-      return (
-        <Controller
-          key={field}
-          name={field}
-          control={control}
-          render={({ field }) => (
-            <TextField
-              required
-              disabled={field.name === "password" || field.name === "email"}
-              {...field}
-              label={field.name}
-              variant="outlined"
-              type={field.name === "password" ? "password" : "text"}
-            />
-          )}
-        />
-      );
-    });
-  }, []);
 
   useEffect(() => {
     const fetchUserPosts = async () => {
@@ -63,7 +41,7 @@ export const Profile: React.FC<{}> = ({}) => {
   const onSubmit = handleSubmit(async (editedUserFields: IUser) => {
     try {
       setIsloading(true);
-      const editedUser = await usersService.edituser(editedUserFields);
+      const editedUser = await usersService.edituser({ ...editedUserFields, email: user.email, password: "" });
       setUser({ ...user, userName: editedUser.userName });
       toast(PROFILE_TEXTS.PROFILE_EDIT_SUCCESS, {
         position: "bottom-center",
@@ -90,20 +68,25 @@ export const Profile: React.FC<{}> = ({}) => {
             <StyledProfileIcon />
           </StyledProfileImg>
           <form onSubmit={onSubmit}>
-            <Stack gap={4}>
-              {fields}
+            <Stack gap={1}>
+              <Controller
+                name="userName"
+                control={control}
+                render={({ field }) => <TextField required {...field} label={field.name} variant="outlined" />}
+              />
               <Button type="submit" variant="contained">
                 {PROFILE_TEXTS.EDIT_PROFILE}
+                <EditIcon />
               </Button>
             </Stack>
           </form>
         </StyledProfileCard>
-        <div>
+        <StyledPostsContainer>
           <Typography variant="h2" color="primary">
             {PROFILE_TEXTS.MY_POSTS}
           </Typography>
           <PostsContainer posts={userPosts} />
-        </div>
+        </StyledPostsContainer>
       </StyledProfile>
       <ToastContainer />
     </>

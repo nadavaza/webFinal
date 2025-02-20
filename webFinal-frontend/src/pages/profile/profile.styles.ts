@@ -8,7 +8,7 @@ export const StyledProfile = styled("div")(() => ({
   alignItems: "center",
   marginTop: "4rem",
   gap: "2rem",
-  padding: ' 0 3rem'
+  padding: " 0 3rem",
 }));
 
 export const StyledProfileCard = styled(Paper)(() => ({
@@ -32,10 +32,7 @@ export const StyledProfileIcon = styled(PersonIcon)(() => ({
 }));
 
 export const StyledPostsContainer = styled("div")(() => ({
-  height: "90%",
-  width: "90%",
+  width: "100%",
   display: "flex",
-  gap: "1rem",
-  flexWrap: "wrap",
-  marginBottom: "2rem",
+  flexDirection: "column",
 }));

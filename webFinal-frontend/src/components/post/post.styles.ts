@@ -1,17 +1,19 @@
 import { Card, CardActions, Typography } from "@mui/material";
 import styled from "styled-components";
 
+export const StyledPost = styled("div")(() => ({
+  width: "30%",
+  display: "flex",
+}));
+
 export const StyledPostCard = styled(Card)(() => ({
-  height: "12rem",
-  width: "40%",
+  height: "10rem",
   textAlign: "left",
 }));
 
 export const StyledPostCardActions = styled(CardActions)(() => ({
-  marginTop: "3rem",
   display: "flex",
   justifyContent: "space-between",
-  padding: "0 1rem 0 1rem !important",
 }));
 
 export const StyledPostContent = styled(Typography)(() => ({
@@ -49,4 +51,10 @@ export const StyledPostLikes = styled("div")(() => ({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
+}));
+
+export const StyledPostPhoto = styled("img")(() => ({
+  width: "10rem",
+  height: "10rem",
+  borderRadius: "10%",
 }));

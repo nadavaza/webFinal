@@ -34,6 +34,12 @@ export const StyledPostOwner = styled("div")(() => ({
   gap: "1rem",
 }));
 
+export const StyledPostPhoto = styled("img")(() => ({
+  width: "20rem",
+  height: "20rem",
+  borderRadius: "10%",
+}));
+
 export const StyledPostDetails = styled("div")(() => ({
   display: "flex",
   alignItems: "center",

@@ -12,6 +12,7 @@ import {
   StyledPostLikes,
   StyledPostOwner,
   StyledPostPage,
+  StyledPostPhoto,
 } from "./postPage.styles";
 import { toast, ToastContainer } from "react-toastify";
 import { ConfirmToast } from "react-confirm-toast";
@@ -26,6 +27,7 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { useUserStore } from "../../store/userStore";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { CommentsContainer } from "../../components/commentsContainer/CommentsContainer";
+import noImage from "../../assets/noImage.jpg";
 
 export const PostPage: React.FC<{}> = () => {
   const { postId } = useParams();
@@ -84,9 +86,7 @@ export const PostPage: React.FC<{}> = () => {
     try {
       const { isLiked } = await postsService.likePost(postId!!, user._id);
       if (post) {
-        const updatedLikes = isLiked
-          ? [...post.likes, user]
-          : post.likes.filter((like) => like._id !== user._id);
+        const updatedLikes = isLiked ? [...post.likes, user] : post.likes.filter((like) => like._id !== user._id);
         setPost({ ...post, likes: updatedLikes });
       }
     } catch (error: any) {
@@ -127,7 +127,7 @@ export const PostPage: React.FC<{}> = () => {
             <StyledPostContentTypography variant="h5" color="secondary">
               {post?.content}
             </StyledPostContentTypography>
-            <img src={post?.photo} alt="img" />
+            <StyledPostPhoto src={post?.photo || noImage} alt="" />
           </StyledPostContent>
           <StyledPostDetails>
             <Typography variant="body1" color="primary">
@@ -140,10 +140,7 @@ export const PostPage: React.FC<{}> = () => {
               <CommentIcon color="secondary" />
             </StyledPostComments>
             <StyledPostLikes>
-              <Typography
-                variant="body1"
-                color={isPostLiked ? "success" : "primary"}
-              >
+              <Typography variant="body1" color={isPostLiked ? "success" : "primary"}>
                 {post?.likes?.length}
               </Typography>
               <IconButton onClick={likePost}>
