@@ -38,7 +38,7 @@ export const NavBar: React.FC<{}> = ({}) => {
   if (location.pathname === "/login") {
     return (
       <>
-        <StyledAppBar position="sticky">
+        <StyledAppBar position="sticky" elevation={0}>
           <Toolbar>
             <StyledLogo src={nbaLogo} />
             <Typography color="primary" variant="h5">
@@ -51,7 +51,7 @@ export const NavBar: React.FC<{}> = ({}) => {
   }
 
   return (
-    <StyledAppBar position="sticky">
+    <StyledAppBar position="sticky"elevation={0}>
       <Toolbar>
         <StyledLogo src={nbaLogo} onClick={goToHome} />
         <Typography color="primary" variant="h5">

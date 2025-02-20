@@ -1,12 +1,19 @@
 import React, { useMemo, useState } from "react";
 import { IPostsContainer } from "./postContainer.types";
-import { StyledPostsContainer, StyledPostsNavigation } from "./postsContainer.styles";
+import {
+  StyledPosts,
+  StyledPostsContainer,
+  StyledPostsNavigation,
+} from "./postsContainer.styles";
 import { Post } from "../post/Post";
 import { IPost } from "../../types/posts.types";
 
-const maxPostsPerPage = 8;
+const maxPostsPerPage = 4;
 
-export const PostsContainer: React.FC<IPostsContainer> = ({ posts, isHome }) => {
+export const PostsContainer: React.FC<IPostsContainer> = ({
+  posts,
+  isHome,
+}) => {
   const [page, setPage] = useState(1);
 
   const currentPosts = useMemo<IPost[]>(() => {
@@ -15,7 +22,10 @@ export const PostsContainer: React.FC<IPostsContainer> = ({ posts, isHome }) => 
 
   const mainPost = useMemo<IPost>(() => posts[0], [posts]);
 
-  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
     setPage(value);
   };
 
@@ -29,9 +39,11 @@ export const PostsContainer: React.FC<IPostsContainer> = ({ posts, isHome }) => 
 
   return (
     <StyledPostsContainer>
-      {currentPosts.map((post, index) => (
-        <Post post={post} key={index} />
-      ))}
+      <StyledPosts>
+        {currentPosts.map((post, index) => (
+          <Post post={post} key={index} />
+        ))}
+      </StyledPosts>
       {currentPosts.length > 0 && (
         <StyledPostsNavigation
           count={Math.ceil(posts.length / maxPostsPerPage)}

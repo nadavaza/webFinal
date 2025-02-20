@@ -4,7 +4,7 @@ export const StyledHome = styled("div")(() => ({
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  justifyContent: "center",
+  marginTop: "3rem",
   flexWrap: "wrap",
   height: "100%",
 }));

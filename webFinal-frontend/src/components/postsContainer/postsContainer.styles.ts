@@ -2,17 +2,18 @@ import { Pagination } from "@mui/material";
 import styled from "styled-components";
 
 export const StyledPostsContainer = styled("div")(() => ({
-  width: "90%",
+  width: '90%'
+}));
+
+export const StyledPosts = styled("div")(() => ({
   display: "flex",
-  gap: "1rem",
+  width: "100%",
   flexWrap: "wrap",
-  marginBottom: "2rem",
-  position: "relative",
-  padding: "1rem",
-  justifyContent: "center",
+  gap: '3rem'
 }));
 
 export const StyledPostsNavigation = styled(Pagination)(() => ({
-  position: "absolute",
-  bottom: "-4rem",
+  // position: "absolute",
+  // bottom: "0",
+  marginTop: "2rem",
 }));

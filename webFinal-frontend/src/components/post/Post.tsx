@@ -27,7 +27,7 @@ export const Post: React.FC<{
   };
 
   return (
-    <StyledPostCard elevation={10} onClick={goToPost}>
+    <StyledPostCard elevation={1} onClick={goToPost}>
       {/* <CardMedia></CardMedia> */}
       <CardContent>
         <StyledPostContent variant="h5" color="primary">

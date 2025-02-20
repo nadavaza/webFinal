@@ -1,4 +1,4 @@
-import { Avatar, Card } from "@mui/material";
+import { Avatar, Card, Paper } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import styled from "styled-components";
 
@@ -6,12 +6,12 @@ export const StyledProfile = styled("div")(() => ({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  flexDirection: "column",
   marginTop: "4rem",
   gap: "2rem",
+  padding: ' 0 3rem'
 }));
 
-export const StyledProfileCard = styled(Card)(() => ({
+export const StyledProfileCard = styled(Paper)(() => ({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",

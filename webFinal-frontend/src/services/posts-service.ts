@@ -1,5 +1,4 @@
 import { IPost } from "../types/posts.types";
-import { IUser } from "../types/users.types";
 import { apiClient } from "./api-client";
 import { getTokens } from "./token-service";
 

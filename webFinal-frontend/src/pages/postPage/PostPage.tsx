@@ -39,6 +39,10 @@ export const PostPage: React.FC<{}> = () => {
     return post?.likes?.find((like) => like?._id === user?._id) !== undefined;
   }, [post]);
 
+  const isUsersPost = useMemo<boolean>(() => {
+    return user._id === post?.owner._id;
+  }, [post]);
+
   useEffect(() => {
     const fetchPost = async () => {
       const fetchedPost = await postsService.getPostById(postId!!);
@@ -56,12 +60,22 @@ export const PostPage: React.FC<{}> = () => {
     try {
       setIsloading(true);
       await postsService.deletePost(postId!!);
-      toast(POST_TEXTS.POST_DELETED, { position: "bottom-center", type: "success", delay: 500, theme: "colored" });
+      toast(POST_TEXTS.POST_DELETED, {
+        position: "bottom-center",
+        type: "success",
+        delay: 500,
+        theme: "colored",
+      });
       setTimeout(function () {
         navigate("/home");
       }, 1000);
     } catch (error: any) {
-      toast(error.response.data, { position: "bottom-center", type: "error", delay: 500, theme: "colored" });
+      toast(error.response.data, {
+        position: "bottom-center",
+        type: "error",
+        delay: 500,
+        theme: "colored",
+      });
     }
     setIsloading(false);
   };
@@ -70,11 +84,18 @@ export const PostPage: React.FC<{}> = () => {
     try {
       const { isLiked } = await postsService.likePost(postId!!, user._id);
       if (post) {
-        const updatedLikes = isLiked ? [...post.likes, user] : post.likes.filter((like) => like._id !== user._id);
+        const updatedLikes = isLiked
+          ? [...post.likes, user]
+          : post.likes.filter((like) => like._id !== user._id);
         setPost({ ...post, likes: updatedLikes });
       }
     } catch (error: any) {
-      toast(error.response.data, { position: "bottom-center", type: "error", delay: 500, theme: "colored" });
+      toast(error.response.data, {
+        position: "bottom-center",
+        type: "error",
+        delay: 500,
+        theme: "colored",
+      });
     }
   };
 
@@ -86,11 +107,13 @@ export const PostPage: React.FC<{}> = () => {
     <>
       <StyledPostPage>
         <StyledPost>
-          {user._id === post?.owner._id && (
-            <StyledDeletePost onClick={deletePost}>
-              <DeleteIcon color="primary" />
-            </StyledDeletePost>
-          )}
+          <div>
+            {isUsersPost && (
+              <StyledDeletePost onClick={deletePost}>
+                <DeleteIcon color="primary" />
+              </StyledDeletePost>
+            )}
+          </div>
           <StyledPostOwner>
             <Avatar>{post?.owner?.photo ? "" : <PersonIcon />}</Avatar>
             <Typography variant="h5" color="primary">
@@ -117,7 +140,10 @@ export const PostPage: React.FC<{}> = () => {
               <CommentIcon color="secondary" />
             </StyledPostComments>
             <StyledPostLikes>
-              <Typography variant="body1" color={isPostLiked ? "success" : "primary"}>
+              <Typography
+                variant="body1"
+                color={isPostLiked ? "success" : "primary"}
+              >
                 {post?.likes?.length}
               </Typography>
               <IconButton onClick={likePost}>

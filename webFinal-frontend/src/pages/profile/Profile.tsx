@@ -1,4 +1,9 @@
-import { StyledProfile, StyledProfileCard, StyledProfileIcon, StyledProfileImg } from "./profile.styles";
+import {
+  StyledProfile,
+  StyledProfileCard,
+  StyledProfileIcon,
+  StyledProfileImg,
+} from "./profile.styles";
 import { useUserStore } from "../../store/userStore";
 import { PROFILE_TEXTS } from "../../consts/profileConsts";
 import { useEffect, useMemo, useState } from "react";
@@ -8,7 +13,7 @@ import { PostsContainer } from "../../components/postsContainer/PostsContainer";
 import { toast, ToastContainer } from "react-toastify";
 import { IUser } from "../../types/users.types";
 import { Controller, useForm } from "react-hook-form";
-import { Button, Stack, TextField } from "@mui/material";
+import { Button, Stack, TextField, Typography } from "@mui/material";
 import usersService from "../../services/users-service";
 import { useLoaderStore } from "../../store/loaderStore";
 
@@ -67,7 +72,12 @@ export const Profile: React.FC<{}> = ({}) => {
         theme: "colored",
       });
     } catch (error: any) {
-      toast(error.response.data, { position: "bottom-center", type: "error", delay: 500, theme: "colored" });
+      toast(error.response.data, {
+        position: "bottom-center",
+        type: "error",
+        delay: 500,
+        theme: "colored",
+      });
     }
     setIsloading(false);
   });
@@ -88,7 +98,12 @@ export const Profile: React.FC<{}> = ({}) => {
             </Stack>
           </form>
         </StyledProfileCard>
-        <PostsContainer posts={userPosts} />
+        <div>
+          <Typography variant="h2" color="primary">
+            {PROFILE_TEXTS.MY_POSTS}
+          </Typography>
+          <PostsContainer posts={userPosts} />
+        </div>
       </StyledProfile>
       <ToastContainer />
     </>

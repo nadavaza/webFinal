@@ -58,7 +58,6 @@ class BaseController<T> {
     const id = req.params.id;
     try {
       let query = this.model.findById(id);
-
       if (populationFields && populationFields.length > 0) {
         populationFields.forEach((field) => {
           query = query.populate(field);

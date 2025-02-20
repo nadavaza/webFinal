@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 export const StyledPostCard = styled(Card)(() => ({
   height: "12rem",
-  width: "25rem",
+  width: "40%",
   textAlign: "left",
 }));
 
