@@ -31,14 +31,14 @@ export const Profile: React.FC<{}> = ({}) => {
   });
 
   useEffect(() => {
-    const fetchUserPosts = async () => {
+    const fetchUserPosts = async (): Promise<void> => {
       const fetchedUserPosts = await postsService.getPostsByOwner(user._id);
       setUserPosts(fetchedUserPosts);
     };
     fetchUserPosts();
   }, []);
 
-  const onSubmit = handleSubmit(async (editedUserFields: IUser) => {
+  const onSubmit = handleSubmit(async (editedUserFields: IUser): Promise<void> => {
     try {
       setIsloading(true);
       const editedUser = await usersService.edituser({ ...editedUserFields, email: user.email, password: "" });

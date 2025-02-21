@@ -28,6 +28,8 @@ import { useUserStore } from "../../store/userStore";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { CommentsContainer } from "../../components/commentsContainer/CommentsContainer";
 import noImage from "../../assets/noImage.jpg";
+import { Comment } from "../../components/comment/Comment";
+import commentsService from "../../services/comments-service";
 
 export const PostPage: React.FC<{}> = () => {
   const { postId } = useParams();
@@ -46,7 +48,7 @@ export const PostPage: React.FC<{}> = () => {
   }, [post]);
 
   useEffect(() => {
-    const fetchPost = async () => {
+    const fetchPost = async (): Promise<void> => {
       const fetchedPost = await postsService.getPostById(postId!!);
       setPost(fetchedPost);
     };
@@ -58,7 +60,7 @@ export const PostPage: React.FC<{}> = () => {
     setShowConfirm(true);
   };
 
-  const confirmDelete = async () => {
+  const confirmDelete = async (): Promise<void> => {
     try {
       setIsloading(true);
       await postsService.deletePost(postId!!);
@@ -82,7 +84,7 @@ export const PostPage: React.FC<{}> = () => {
     setIsloading(false);
   };
 
-  const likePost = async () => {
+  const likePost = async (): Promise<void> => {
     try {
       const { isLiked } = await postsService.likePost(postId!!, user._id);
       if (post) {
@@ -99,9 +101,28 @@ export const PostPage: React.FC<{}> = () => {
     }
   };
 
-  // const addComment = async (commentContent: string) => {
-  //   console.log(commentContent);
-  // };
+  const addComment = async (commentContent: string): Promise<boolean> => {
+    try {
+      setIsloading(true);
+      const newComment = await commentsService.addComment({
+        content: commentContent,
+        owner: user._id,
+        postId: post?._id,
+      });
+      setPost({ ...(post as IPost), comments: [...(post?.comments ?? []), newComment] });
+      setIsloading(false);
+      return true;
+    } catch (error: any) {
+      toast(error.response.data, {
+        position: "bottom-center",
+        type: "error",
+        delay: 500,
+        theme: "colored",
+      });
+      setIsloading(false);
+      return false;
+    }
+  };
 
   return (
     <>
@@ -149,7 +170,7 @@ export const PostPage: React.FC<{}> = () => {
             </StyledPostLikes>
           </StyledPostDetails>
         </StyledPost>
-        <CommentsContainer comments={post?.comments} />
+        <CommentsContainer comments={post?.comments} addComment={addComment} />
       </StyledPostPage>
 
       <ConfirmToast

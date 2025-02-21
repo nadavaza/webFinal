@@ -7,3 +7,9 @@ export interface IComment {
   date: string;
   postId: string;
 }
+
+export interface INewComment {
+  content: string;
+  owner: string;
+  postId?: string;
+}

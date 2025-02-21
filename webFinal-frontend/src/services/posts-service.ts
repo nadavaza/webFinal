@@ -3,7 +3,7 @@ import { apiClient } from "./api-client";
 import { getTokens } from "./token-service";
 
 class PostsService {
-  async getPosts() {
+  async getPosts(): Promise<IPost[]> {
     try {
       return (await apiClient.get<IPost[]>("/posts", { headers: { Authorization: `JWT ${getTokens().accessToken}` } }))
         .data;
@@ -11,7 +11,7 @@ class PostsService {
       throw error;
     }
   }
-  async getPostsByOwner(owner: string) {
+  async getPostsByOwner(owner: string): Promise<IPost[]> {
     try {
       return (
         await apiClient.get<IPost[]>("/posts", {
@@ -23,7 +23,7 @@ class PostsService {
       throw error;
     }
   }
-  async getPostById(postId: string) {
+  async getPostById(postId: string): Promise<IPost> {
     try {
       return (
         await apiClient.get<IPost>(`/posts/${postId}`, {
@@ -34,7 +34,7 @@ class PostsService {
       throw error;
     }
   }
-  async addPost(newPost: IPost, userId: string) {
+  async addPost(newPost: IPost, userId: string): Promise<IPost> {
     try {
       return (
         await apiClient.post<IPost>("/posts", newPost, {
@@ -46,7 +46,7 @@ class PostsService {
       throw error;
     }
   }
-  async deletePost(postId: string) {
+  async deletePost(postId: string): Promise<IPost> {
     try {
       return (
         await apiClient.delete(`/posts/${postId}`, {
@@ -57,7 +57,7 @@ class PostsService {
       throw error;
     }
   }
-  async likePost(postId: string, userId: string) {
+  async likePost(postId: string, userId: string): Promise<any> {
     try {
       return (
         await apiClient.post<any>(

@@ -4,42 +4,42 @@ import { apiClient } from "./api-client";
 import { getTokens } from "./token-service";
 
 class UsersService {
-  async login(user: IUser) {
+  async login(user: IUser): Promise<IUser> {
     try {
       return (await apiClient.post<IUser>("/auth/login", user)).data;
     } catch (error: any) {
       throw error;
     }
   }
-  async googleSignin(credentialResponse: CredentialResponse) {
+  async googleSignin(credentialResponse: CredentialResponse): Promise<IUser> {
     try {
       return (await apiClient.post<IUser>("/auth/googleSignin", credentialResponse)).data;
     } catch (error: any) {
       throw error;
     }
   }
-  async register(user: IUser) {
+  async register(user: IUser): Promise<IUser> {
     try {
       return (await apiClient.post<IUser>("/auth/register", user)).data;
     } catch (error: any) {
       throw error;
     }
   }
-  async logout(refreshToken: string) {
+  async logout(refreshToken: string): Promise<IUser> {
     try {
       return (await apiClient.post("/auth/logout", { refreshToken })).data;
     } catch (error: any) {
       throw error;
     }
   }
-  async refresh(refreshToken: string) {
+  async refresh(refreshToken: string): Promise<IUser> {
     try {
       return (await apiClient.post<IUser>("/auth/refresh", { refreshToken })).data;
     } catch (error: any) {
       throw error;
     }
   }
-  async edituser(editedUser: IUser) {
+  async edituser(editedUser: IUser): Promise<IUser> {
     try {
       return (
         await apiClient.put<IUser>("/auth/edit", editedUser, {

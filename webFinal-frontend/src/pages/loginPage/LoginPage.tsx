@@ -49,7 +49,7 @@ export const LoginPage: React.FC<{}> = () => {
       .filter(Boolean);
   }, [isLogin]);
 
-  const onSubmit = handleSubmit(async (user: IUser) => {
+  const onSubmit = handleSubmit(async (user: IUser): Promise<void> => {
     try {
       const loggedUser = isLogin ? await usersService.login(user as IUser) : await usersService.register(user as IUser);
       if (loggedUser) {

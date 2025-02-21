@@ -27,7 +27,7 @@ function App() {
   const { isLoading } = useLoaderStore();
 
   useEffect(() => {
-    const refreshUser = async () => {
+    const refreshUser = async (): Promise<void> => {
       try {
         if (getTokens().refreshToken) {
           const refreshedUser = await usersService.refresh(getTokens().refreshToken);

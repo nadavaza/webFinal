@@ -16,7 +16,7 @@ export const Home: React.FC<{}> = () => {
   const { setIsloading } = useLoaderStore();
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchPosts = async (): Promise<void> => {
       const fetchedPosts = await postsService.getPosts();
       setPosts(fetchedPosts);
     };
@@ -24,7 +24,7 @@ export const Home: React.FC<{}> = () => {
     fetchPosts();
   }, []);
 
-  const addNewPost = async (newPost: IPost) => {
+  const addNewPost = async (newPost: IPost): Promise<void> => {
     try {
       setIsloading(true);
       const addedPost = await postsService.addPost(newPost, user?._id);

@@ -12,13 +12,14 @@ import PersonIcon from "@mui/icons-material/Person";
 import SendIcon from "@mui/icons-material/Send";
 import { formatDate } from "../../utils/dateUtils";
 import { Controller, useForm } from "react-hook-form";
+import { POST_TEXTS } from "../../consts/postConsts";
 
 export const Comment: React.FC<{
   comment?: IComment;
   isNew?: boolean;
   addComment?: (commentContent: string) => {};
 }> = ({ comment, isNew, addComment }) => {
-  const { handleSubmit, control } = useForm({
+  const { handleSubmit, control, reset } = useForm({
     defaultValues: {
       content: "",
     },
@@ -26,7 +27,8 @@ export const Comment: React.FC<{
 
   const onSubmit = (data: { content: string }) => {
     if (addComment) {
-      addComment(data.content);
+      const isPostAdded = addComment(data.content);
+      isPostAdded && reset();
     }
   };
 
@@ -54,13 +56,12 @@ export const Comment: React.FC<{
                   multiline
                   required
                   rows={5}
+                  placeholder={POST_TEXTS.ADD_COMMENT}
                 />
               )}
             />
           ) : (
-            <StyledCommentContentTypography color="primary">
-              {comment?.content}
-            </StyledCommentContentTypography>
+            <StyledCommentContentTypography color="primary">{comment?.content}</StyledCommentContentTypography>
           )}
         </StyledCommentContentContainer>
       </>

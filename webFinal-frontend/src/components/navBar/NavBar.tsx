@@ -16,7 +16,7 @@ export const NavBar: React.FC<{}> = ({}) => {
   const location = useLocation();
   const { user } = useUserStore();
 
-  const logOut = async () => {
+  const logOut = async (): Promise<void> => {
     try {
       const refreshToken = getTokens().refreshToken;
       await usersService.logout(refreshToken);
@@ -51,7 +51,7 @@ export const NavBar: React.FC<{}> = ({}) => {
   }
 
   return (
-    <StyledAppBar position="sticky"elevation={0}>
+    <StyledAppBar position="sticky" elevation={0}>
       <Toolbar>
         <StyledLogo src={nbaLogo} onClick={goToHome} />
         <Typography color="primary" variant="h5">
