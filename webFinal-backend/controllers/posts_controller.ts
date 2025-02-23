@@ -18,16 +18,6 @@ class PostsController extends BaseController<IPost> {
     super(postModel);
   }
 
-  async create(req: Request, res: Response) {
-    const userId = req.params.userId;
-    const post = {
-      ...req.body,
-      owner: userId,
-    };
-    req.body = post;
-    super.create(req, res);
-  }
-
   async likePost(req: Request, res: Response) {
     const postId = req.params.id;
     const userId = req.body.userId;

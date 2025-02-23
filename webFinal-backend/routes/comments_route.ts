@@ -124,7 +124,7 @@ router.get(
  *       500:
  *         description: Server error
  */
-router.post("/", authMiddleware, commentsController.create.bind(commentsController));
+router.post("/", authMiddleware, commentsController.createHandler(commentsController, [{ path: "owner", select: "" }] , () => {} ));
 
 /**
  * @swagger
@@ -150,6 +150,6 @@ router.post("/", authMiddleware, commentsController.create.bind(commentsControll
  *       500:
  *         description: Server error
  */
-router.delete("/:id", authMiddleware, commentsController.deleteItem.bind(commentsController));
+router.delete("/:id", authMiddleware, commentsController.deleteItem.bind(commentsController))
 
 export default router;

@@ -148,7 +148,22 @@ router.get(
  *       500:
  *         description: Server error
  */
-router.post("/", authMiddleware, postsController.create.bind(postsController));
+
+router.post(
+  "/",
+  authMiddleware,
+  postsController.createHandler(
+    postsController,
+    [
+      { path: "owner", select: "userName" },
+      { path: "comments", select: "", populate: { path: "owner", select: "" } },
+      { path: "likes", select: "userName" },
+    ],
+    (req) => {
+      req.body.owner = req.params.userId;
+    }
+  )
+);
 
 /**
  * @swagger
@@ -175,8 +190,16 @@ router.post("/", authMiddleware, postsController.create.bind(postsController));
  *       500:
  *         description: Server error
  */
-router.delete("/:id", authMiddleware, postsController.deleteItem.bind(postsController));
+router.delete(
+  "/:id",
+  authMiddleware,
+  postsController.deleteItem.bind(postsController)
+);
 
-router.post("/likePost/:id", authMiddleware, postsController.likePost.bind(postsController));
+router.post(
+  "/likePost/:id",
+  authMiddleware,
+  postsController.likePost.bind(postsController)
+);
 
 export default router;

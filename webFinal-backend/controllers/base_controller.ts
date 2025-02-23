@@ -70,15 +70,57 @@ class BaseController<T> {
     }
   }
 
-  async create(req: Request, res: Response) {
+  createHandler(controller: any, populationFields: IPopulationField[], preprocess?: (req: Request) => void) {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        if (preprocess) {
+          preprocess(req); // Apply preprocessing if provided
+        }
+        await controller.create(req, res, populationFields);
+      } catch (error) {
+        next(error);
+      }
+    };
+  }
+
+  async create(req: Request, res: Response, populationFields: IPopulationField[]) {
     const body = req.body;
     try {
-      const item = await this.model.create(body);
+      let item = await this.model.create(body);
+      if (item && populationFields && populationFields.length > 0) {
+        item = await this.model.findById(item._id).populate(populationFields) ?? item;
+      }
       res.status(201).send(item);
     } catch (error) {
       res.status(400).send(error);
     }
   }
+
+  updateHandler(controller: any, populationFields: IPopulationField[]) {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        await controller.update(req, res, populationFields);
+      } catch (error) {
+        next(error);
+      }
+    };
+  }
+
+  async update(req: Request, res: Response, populationFields: IPopulationField[]) {
+    const id = req.params.id;
+    const body = req.body;
+    try {
+      let item = await this.model.findByIdAndUpdate(id, body, { new: true });
+      if (populationFields && populationFields.length > 0) {
+        item = await this.model.findById(item?._id).populate(populationFields);
+      }
+      res.status(200).send(item);
+    } catch (error) {
+      res.status(400).send(error);
+    }
+  }
+
+
 
   async deleteItem(req: Request, res: Response) {
     const id = req.params.id;
