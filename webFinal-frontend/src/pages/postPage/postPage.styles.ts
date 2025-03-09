@@ -35,8 +35,8 @@ export const StyledPostOwner = styled("div")(() => ({
 }));
 
 export const StyledPostPhoto = styled("img")(() => ({
-  width: "20rem",
-  height: "20rem",
+  width: "15rem",
+  height: "15rem",
   borderRadius: "10%",
 }));
 

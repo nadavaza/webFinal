@@ -1,4 +1,4 @@
-import { Card } from "@mui/material";
+import { Card, Paper } from "@mui/material";
 import styled from "styled-components";
 
 export const StyledLogin = styled("div")(() => ({
@@ -15,7 +15,7 @@ export const StyledLoginLogo = styled("img")(() => ({
   margin: "2rem",
 }));
 
-export const StyledLoginCard = styled(Card)(() => ({
+export const StyledLoginCard = styled(Paper)(() => ({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",

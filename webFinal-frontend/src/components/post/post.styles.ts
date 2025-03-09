@@ -4,6 +4,7 @@ import styled from "styled-components";
 export const StyledPost = styled("div")(() => ({
   width: "30%",
   display: "flex",
+  alignItems: "center",
 }));
 
 export const StyledPostCard = styled(Card)(() => ({
@@ -54,7 +55,7 @@ export const StyledPostLikes = styled("div")(() => ({
 }));
 
 export const StyledPostPhoto = styled("img")(() => ({
-  width: "10rem",
-  height: "10rem",
+  width: "8rem",
+  height: "8rem",
   borderRadius: "10%",
 }));
