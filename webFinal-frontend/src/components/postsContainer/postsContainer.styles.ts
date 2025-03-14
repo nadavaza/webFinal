@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 export const StyledPostsContainer = styled("div")(() => ({
   width: "90%",
+  position: "relative",
 }));
 
 export const StyledPosts = styled("div")(() => ({

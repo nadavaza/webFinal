@@ -2,37 +2,43 @@ import {
   StyledCloseEdit,
   StyledPostsContainer,
   StyledProfile,
+  StyledProfileActions,
   StyledProfileCard,
+  StyledProfileClose,
+  StyledProfileEdit,
   StyledProfileIcon,
   StyledProfileImg,
+  StyledProfileImgContainer,
   StyledProfileStack,
 } from "./profile.styles";
 import { useUserStore } from "../../store/userStore";
 import { PROFILE_TEXTS } from "../../consts/profileConsts";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IPost } from "../../types/posts.types";
 import postsService from "../../services/posts-service";
 import { PostsContainer } from "../../components/postsContainer/PostsContainer";
 import { toast, ToastContainer } from "react-toastify";
-import { IUser } from "../../types/users.types";
+import { IProfileUser, IUser } from "../../types/users.types";
 import { Controller, useForm } from "react-hook-form";
-import { Button, IconButton, TextField, Typography } from "@mui/material";
+import { Button, TextField, Typography } from "@mui/material";
 import usersService from "../../services/users-service";
 import { useLoaderStore } from "../../store/loaderStore";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import CloseIcon from "@mui/icons-material/Close";
-import ImageUploading from "react-images-uploading";
+import filesService from "../../services/files-service";
 
 export const Profile: React.FC<{}> = ({}) => {
   const { user, setUser } = useUserStore();
   const [userPosts, setUserPosts] = useState<IPost[]>([]);
   const { setIsloading } = useLoaderStore();
   const [isEdit, setIsEdit] = useState<boolean>(false);
+  const fileInput = useRef<HTMLInputElement>(null);
+  const [preview, setPreview] = useState<string | null>(null);
 
-  const { control, handleSubmit } = useForm<IUser>({
+  const { control, handleSubmit, reset, setValue } = useForm<IProfileUser>({
     defaultValues: {
-      photo: user.photo,
+      photo: user.photo || null,
       userName: user.userName,
     },
   });
@@ -45,34 +51,52 @@ export const Profile: React.FC<{}> = ({}) => {
     fetchUserPosts();
   }, []);
 
-  const onSubmit = handleSubmit(
-    async (editedUserFields: IUser): Promise<void> => {
-      try {
-        setIsloading(true);
-        const editedUser = await usersService.edituser({
-          ...editedUserFields,
-          email: user.email,
-          password: "",
-        });
-        setUser({ ...user, userName: editedUser.userName });
-        toast(PROFILE_TEXTS.PROFILE_EDIT_SUCCESS, {
-          position: "bottom-center",
-          type: "success",
-          delay: 500,
-          theme: "colored",
-        });
-      } catch (error: any) {
-        toast(error.response.data, {
-          position: "bottom-center",
-          type: "error",
-          delay: 500,
-          theme: "colored",
-        });
+  const selectPhoto = (): void => {
+    fileInput?.current?.click();
+  };
+
+  const handleDeleteImage = () => {
+    setPreview(null);
+    setValue("photo", null as any);
+  };
+
+  const onSubmit = handleSubmit(async (editedUserFields: IProfileUser): Promise<void> => {
+    try {
+      setIsloading(true);
+      let photoPath = "";
+      if (editedUserFields.photo instanceof File) {
+        photoPath = await filesService.uploadFile(editedUserFields.photo);
       }
-      setIsEdit(false);
-      setIsloading(false);
+      const editedUser = await usersService.edituser({
+        ...editedUserFields,
+        email: user.email,
+        password: "",
+        photo: photoPath || user.photo,
+      } as IUser);
+      setUser({ ...user, userName: editedUser.userName, photo: editedUser.photo });
+      toast(PROFILE_TEXTS.PROFILE_EDIT_SUCCESS, {
+        position: "bottom-center",
+        type: "success",
+        delay: 500,
+        theme: "colored",
+      });
+    } catch (error: any) {
+      toast(error.response.data, {
+        position: "bottom-center",
+        type: "error",
+        delay: 500,
+        theme: "colored",
+      });
     }
-  );
+    setIsEdit(false);
+    setIsloading(false);
+  });
+
+  const closeEdit = (): void => {
+    setIsEdit(false);
+    reset();
+    setPreview(null);
+  };
 
   return (
     <>
@@ -82,40 +106,57 @@ export const Profile: React.FC<{}> = ({}) => {
         </Typography>
         <StyledProfileCard>
           {isEdit && (
-            <StyledCloseEdit color="primary" onClick={() => setIsEdit(false)}>
+            <StyledCloseEdit color="primary" onClick={closeEdit}>
               <CloseIcon />
             </StyledCloseEdit>
           )}
           <form onSubmit={onSubmit}>
             <StyledProfileStack gap={1}>
-              {/* <Controller
+              <Controller
                 name="photo"
                 control={control}
                 render={({ field }) => (
-
+                  <input
+                    style={{ display: "none" }}
+                    ref={fileInput}
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const files = e.target.files;
+                      if (files && files.length > 0) {
+                        field.onChange(files[0]);
+                        setPreview(URL.createObjectURL(files[0]));
+                      }
+                    }}
+                    onClick={(e) => {
+                      e.target.value = null;
+                    }}
+                  />
                 )}
-              /> */}
+              />
 
-              <StyledProfileImg>
-                <StyledProfileIcon />
-              </StyledProfileImg>
-              {isEdit && (
-                <Button>
-                  {PROFILE_TEXTS.EDIT_PROFILE_IMG}
-                  <EditIcon />
-                </Button>
-              )}
+              <StyledProfileImgContainer>
+                <StyledProfileImg>
+                  {preview ? (
+                    <img src={preview} alt="Preview" width={"100%"} height={"100%"} />
+                  ) : user.photo ? (
+                    <img src={user.photo} alt="Preview" width={"100%"} height={"100%"} />
+                  ) : (
+                    <StyledProfileIcon />
+                  )}
+                </StyledProfileImg>
+                {isEdit && (
+                  <StyledProfileActions>
+                    <StyledProfileEdit color="primary" onClick={selectPhoto} />
+                    {preview && <StyledProfileClose color="primary" onClick={handleDeleteImage} />}
+                  </StyledProfileActions>
+                )}
+              </StyledProfileImgContainer>
               <Controller
                 name="userName"
                 control={control}
                 render={({ field }) => (
-                  <TextField
-                    required
-                    {...field}
-                    label={field.name}
-                    variant="outlined"
-                    disabled={!isEdit}
-                  />
+                  <TextField required {...field} label={field.name} variant="outlined" disabled={!isEdit} />
                 )}
               />
               {isEdit && (
@@ -139,7 +180,12 @@ export const Profile: React.FC<{}> = ({}) => {
           <PostsContainer posts={userPosts} />
         </StyledPostsContainer>
       </StyledProfile>
-      <ToastContainer />
+      <ToastContainer
+        autoClose={3000} // Closes after 3 seconds
+        closeOnClick // Enables click-to-close
+        pauseOnHover={false} // Prevents staying open on hover
+      />
+      ;
     </>
   );
 };

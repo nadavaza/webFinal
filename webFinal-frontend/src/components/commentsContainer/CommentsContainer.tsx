@@ -18,10 +18,10 @@ export const CommentsContainer: React.FC<{
       <Comment isNew addComment={addComment} />
       <Divider />
       {comments?.map((comment, index) => (
-        <>
-          <Comment comment={comment} key={index} />
+        <div key={index}>
+          <Comment comment={comment} />
           <Divider />
-        </>
+        </div>
       ))}
     </StyledPostCommentsContainer>
   );

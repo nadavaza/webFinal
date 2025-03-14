@@ -59,7 +59,7 @@ export const NavBar: React.FC<{}> = ({}) => {
         </Typography>
         <StyledProfile onClick={goToProfile}>
           <Avatar>
-            <PersonIcon />
+            {user.photo ? <img src={user.photo} alt="Preview" width={"100%"} height={"100%"} /> : <PersonIcon />}
           </Avatar>
           <Typography variant="h6" color="secondary">
             {user.userName}

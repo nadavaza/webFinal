@@ -12,6 +12,7 @@ export const StyledCommentOwner = styled("div")(() => ({
   alignItems: "center",
   gap: "1rem",
   flexDirection: "column",
+  width: "8rem",
 }));
 
 export const StyledCommentContentTypography = styled(Typography)(() => ({

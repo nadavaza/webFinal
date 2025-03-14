@@ -11,7 +11,7 @@ import {
   StyledPostOwner,
   StyledPostPhoto,
 } from "./post.styles";
-import { Avatar, CardContent, CardMedia, Chip, Typography } from "@mui/material";
+import { Avatar, CardContent, Typography } from "@mui/material";
 import { IPost } from "../../types/posts.types";
 import CommentIcon from "@mui/icons-material/Comment";
 import { useNavigate } from "react-router";
@@ -43,7 +43,13 @@ export const Post: React.FC<{
         </CardContent>
         <StyledPostCardActions>
           <StyledPostOwner>
-            <Avatar>{post?.owner?.photo ? "" : <PersonIcon />}</Avatar>
+            <Avatar>
+              {post?.owner?.photo ? (
+                <img src={post?.owner?.photo} alt="Preview" width={"100%"} height={"100%"} />
+              ) : (
+                <PersonIcon />
+              )}
+            </Avatar>
             <Typography variant="body2" color="primary">
               {post?.owner?.userName}
             </Typography>

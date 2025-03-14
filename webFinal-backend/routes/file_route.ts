@@ -1,6 +1,6 @@
-import multer from "multer";
 import express from "express";
 const router = express.Router();
+import multer from "multer";
 
 const base = process.env.DOMAIN_BASE + "/";
 const storage = multer.diskStorage({
@@ -8,14 +8,19 @@ const storage = multer.diskStorage({
     cb(null, "public/");
   },
   filename: function (req, file, cb) {
-    const ext = file.originalname.split(".").filter(Boolean).slice(1).join(".");
+    const ext = file.originalname
+      .split(".")
+      .filter(Boolean) // removes empty extensions (e.g. `filename...txt`)
+      .slice(1)
+      .join(".");
+    console.log(ext);
+
     cb(null, Date.now() + "." + ext);
   },
 });
 const upload = multer({ storage: storage });
 
 router.post("/", upload.single("file"), (req, res) => {
-  console.log("router.post(/file: " + base + req.file?.path);
   res.status(200).send({ url: base + req.file?.path });
 });
 export = router;

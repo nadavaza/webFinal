@@ -6,19 +6,20 @@ import express, { Express } from "express";
 import postsRoute from "./routes/posts_route";
 import commentsRoute from "./routes/comments_route";
 import authRoutes from "./routes/auth_route";
+import fileRoute from "./routes/file_route";
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUI from "swagger-ui-express";
 import cors from "cors";
 
 const app = express();
 app.use(cors());
-app.use(express.static("public"));
+app.use("/public", express.static("public"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/posts", postsRoute);
 app.use("/comments", commentsRoute);
 app.use("/auth", authRoutes);
-app.use(express.static("public"));
+app.use("/files", fileRoute);
 
 const options = {
   definition: {

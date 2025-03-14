@@ -63,7 +63,7 @@ router.get(
   "/",
   authMiddleware,
   postsController.getAllHandler(postsController, "owner", [
-    { path: "owner", select: "userName" },
+    { path: "owner", select: "userName photo" },
     { path: "comments", select: "owner" },
     { path: "likes", select: "" },
   ])
@@ -100,7 +100,7 @@ router.get(
   "/:id",
   authMiddleware,
   postsController.getByIdHandler(postsController, [
-    { path: "owner", select: "userName" },
+    { path: "owner", select: "userName photo" },
     { path: "comments", select: "", populate: { path: "owner", select: "" } },
     { path: "likes", select: "userName" },
   ])
@@ -155,7 +155,7 @@ router.post(
   postsController.createHandler(
     postsController,
     [
-      { path: "owner", select: "userName" },
+      { path: "owner", select: "userName photo" },
       { path: "comments", select: "", populate: { path: "owner", select: "" } },
       { path: "likes", select: "userName" },
     ],
@@ -190,16 +190,8 @@ router.post(
  *       500:
  *         description: Server error
  */
-router.delete(
-  "/:id",
-  authMiddleware,
-  postsController.deleteItem.bind(postsController)
-);
+router.delete("/:id", authMiddleware, postsController.deleteItem.bind(postsController));
 
-router.post(
-  "/likePost/:id",
-  authMiddleware,
-  postsController.likePost.bind(postsController)
-);
+router.post("/likePost/:id", authMiddleware, postsController.likePost.bind(postsController));
 
 export default router;

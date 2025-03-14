@@ -9,12 +9,12 @@
     "test": "copy .env_test .env && jest --detectOpenHandles --forceExit --runInBand",
     "testAuth": "copy .env_test .env && jest --detectOpenHandles --forceExit auth.test.ts",
     "testPost": "copy .env_test .env && jest --detectOpenHandles --forceExit posts.test.ts",
-    "testComments": "copy .env_test .env && jest --detectOpenHandles --forceExit comments.test.ts"
+    "testComments": "copy .env_test .env && jest --detectOpenHandles --forceExit comments.test.ts",
+     "testFile": "copy .env_test .env && jest --detectOpenHandles --forceExit file.test.ts"
   },
   "author": "Nadav azaria",
   "license": "ISC",
   "dependencies": {
-    "@google/generative-ai": "^0.21.0",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
@@ -23,7 +23,8 @@
     "google-auth-library": "^9.15.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.8.1",
-    "multer": "^1.4.5-lts.1"
+    "multer": "^1.4.5-lts.1",
+    "node-fetch": "^3.3.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",

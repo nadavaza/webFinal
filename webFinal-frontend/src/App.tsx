@@ -30,27 +30,16 @@ function App() {
     const refreshUser = async (): Promise<void> => {
       try {
         if (getTokens().refreshToken) {
-          const refreshedUser = await usersService.refresh(
-            getTokens().refreshToken
-          );
+          const refreshedUser = await usersService.refresh(getTokens().refreshToken);
           if (refreshedUser) {
-            setTokens(
-              refreshedUser.accessToken!!,
-              refreshedUser.refreshToken!!
-            );
+            setTokens(refreshedUser.accessToken!!, refreshedUser.refreshToken!!);
             setUser(refreshedUser);
             navigate("/home");
           }
         }
       } catch (error: any) {
-        // setTokens("", "");
-        // navigate("/login");
-        toast(error.response.data, {
-          position: "bottom-center",
-          type: "error",
-          delay: 500,
-          theme: "colored",
-        });
+        setTokens("", "");
+        navigate("/login");
       }
     };
     refreshUser();
@@ -66,14 +55,9 @@ function App() {
           <Routes>
             <Route path="/" element={<Navigate to="/login" />} />
             {routes.map((currRoute, index) => (
-              <Route
-                path={currRoute.path}
-                Component={currRoute.component}
-                key={index}
-              />
+              <Route path={currRoute.path} Component={currRoute.component} key={index} />
             ))}
           </Routes>
-          <ToastContainer />
         </GoogleOAuthProvider>
       </ThemeProvider>
     </>

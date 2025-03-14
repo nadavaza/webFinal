@@ -28,7 +28,6 @@ import { useUserStore } from "../../store/userStore";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { CommentsContainer } from "../../components/commentsContainer/CommentsContainer";
 import noImage from "../../assets/noImage.jpg";
-import { Comment } from "../../components/comment/Comment";
 import commentsService from "../../services/comments-service";
 
 export const PostPage: React.FC<{}> = () => {
@@ -109,7 +108,7 @@ export const PostPage: React.FC<{}> = () => {
         owner: user._id,
         postId: post?._id,
       });
-      setPost({ ...(post as IPost), comments: [...(post?.comments ?? []), newComment] });
+      setPost({ ...(post as IPost), comments: [newComment, ...(post?.comments ?? [])] });
       setIsloading(false);
       return true;
     } catch (error: any) {
@@ -136,7 +135,14 @@ export const PostPage: React.FC<{}> = () => {
             )}
           </div>
           <StyledPostOwner>
-            <Avatar>{post?.owner?.photo ? "" : <PersonIcon />}</Avatar>
+            <Avatar>
+              {" "}
+              {post?.owner?.photo ? (
+                <img src={post?.owner?.photo} alt="Preview" width={"100%"} height={"100%"} />
+              ) : (
+                <PersonIcon />
+              )}
+            </Avatar>
             <Typography variant="h5" color="primary">
               {post?.owner?.userName}
             </Typography>
@@ -172,7 +178,6 @@ export const PostPage: React.FC<{}> = () => {
         </StyledPost>
         <CommentsContainer comments={post?.comments} addComment={addComment} />
       </StyledPostPage>
-
       <ConfirmToast
         toastText={POST_TEXTS.CONFIRM_DELETE}
         theme="snow"
@@ -181,7 +186,12 @@ export const PostPage: React.FC<{}> = () => {
         setShowConfirmToast={setShowConfirm}
         showConfirmToast={showConfirm}
       />
-      <ToastContainer />
+      <ToastContainer
+        autoClose={3000} // Closes after 3 seconds
+        closeOnClick // Enables click-to-close
+        pauseOnHover={false} // Prevents staying open on hover
+      />
+      ;
     </>
   );
 };

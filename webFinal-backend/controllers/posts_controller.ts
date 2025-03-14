@@ -1,17 +1,6 @@
 import postModel, { IPost } from "../models/posts_model";
 import { Request, Response } from "express";
 import BaseController from "./base_controller";
-// const { GoogleGenerativeAI } = require("@google/generative-ai");
-
-// const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY);
-
-// const generationConfig = {
-//   temperature: 1,
-//   topP: 0.95,
-//   topK: 40,
-//   maxOutputTokens: 8192,
-//   responseMimeType: "text/plain",
-// };
 
 class PostsController extends BaseController<IPost> {
   constructor() {

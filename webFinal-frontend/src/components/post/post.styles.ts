@@ -58,4 +58,5 @@ export const StyledPostPhoto = styled("img")(() => ({
   width: "8rem",
   height: "8rem",
   borderRadius: "10%",
+  objectFit: "fill",
 }));

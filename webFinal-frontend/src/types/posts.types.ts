@@ -11,3 +11,9 @@ export interface IPost {
   comments: IComment[];
   likes: IUser[];
 }
+
+export interface INewPost {
+  title: string;
+  content?: string;
+  photo?: File;
+}

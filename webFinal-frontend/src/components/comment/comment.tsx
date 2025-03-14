@@ -7,7 +7,7 @@ import {
   StyledCommentOwner,
 } from "./comment.styles";
 import { IComment } from "../../types/comments.types";
-import { Avatar, Fab, IconButton, Typography } from "@mui/material";
+import { Avatar, IconButton, Typography } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import SendIcon from "@mui/icons-material/Send";
 import { formatDate } from "../../utils/dateUtils";
@@ -35,7 +35,13 @@ export const Comment: React.FC<{
   return (
     <StyledComment>
       <StyledCommentOwner>
-        <Avatar>{comment?.owner?.photo ? "" : <PersonIcon />}</Avatar>
+        <Avatar>
+          {comment?.owner?.photo ? (
+            <img src={comment?.owner?.photo} alt="Preview" width={"100%"} height={"100%"} />
+          ) : (
+            <PersonIcon />
+          )}
+        </Avatar>
         <Typography variant="h5" color="primary">
           {comment?.owner?.userName}
         </Typography>

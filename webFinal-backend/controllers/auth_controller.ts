@@ -36,6 +36,7 @@ const register = async (req: Request, res: Response) => {
       email: req.body.email,
       userName: req.body.userName,
       password: hashedPassword,
+      photo: req.body.photo,
     });
     /* istanbul ignore next */
     if (!process.env.TOKEN_SECRET) {
@@ -123,6 +124,8 @@ const login = async (req: Request, res: Response) => {
       user.refreshToken = [];
     }
     user.refreshToken.push(tokens.refreshToken);
+    console.log(user.photo);
+
     await user.save();
     res.status(200).send({
       _id: user._id,

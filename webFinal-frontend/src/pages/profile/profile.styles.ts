@@ -1,6 +1,8 @@
-import { Avatar, Card, IconButton, Paper, Stack } from "@mui/material";
+import { Avatar, IconButton, Paper, Stack } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import styled from "styled-components";
+import EditIcon from "@mui/icons-material/Edit";
+import CloseIcon from "@mui/icons-material/Close";
 
 export const StyledProfile = styled("div")(() => ({
   display: "flex",
@@ -33,9 +35,28 @@ export const StyledProfileStack = styled(Stack)(() => ({
   alignItems: "center",
 }));
 
+export const StyledProfileImgContainer = styled("div")(() => ({
+  position: "relative",
+  height: "8rem",
+}));
+
+export const StyledProfileActions = styled("div")(() => ({
+  position: "absolute",
+  bottom: "0",
+  right: "-2rem",
+}));
+
 export const StyledProfileImg = styled(Avatar)(() => ({
   height: "8rem !important",
   width: "8rem !important",
+}));
+
+export const StyledProfileEdit = styled(EditIcon)(() => ({
+  cursor: "pointer",
+}));
+
+export const StyledProfileClose = styled(CloseIcon)(() => ({
+  cursor: "pointer",
 }));
 
 export const StyledProfileIcon = styled(PersonIcon)(() => ({

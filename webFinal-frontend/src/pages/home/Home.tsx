@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { IPost } from "../../types/posts.types";
+import { INewPost, IPost } from "../../types/posts.types";
 import postsService from "../../services/posts-service";
 import { StyledHome } from "./home.styles";
 import { toast, ToastContainer } from "react-toastify";
@@ -9,6 +9,7 @@ import { useLoaderStore } from "../../store/loaderStore";
 import { PostsContainer } from "../../components/postsContainer/PostsContainer";
 import { Typography } from "@mui/material";
 import { HOME_TEXTS } from "../../consts/homeConsts";
+import filesService from "../../services/files-service";
 
 export const Home: React.FC<{}> = () => {
   const [posts, setPosts] = useState<IPost[]>([]);
@@ -24,10 +25,17 @@ export const Home: React.FC<{}> = () => {
     fetchPosts();
   }, []);
 
-  const addNewPost = async (newPost: IPost): Promise<void> => {
+  const addNewPost = async (newPost: INewPost): Promise<void> => {
     try {
       setIsloading(true);
-      const addedPost = await postsService.addPost(newPost, user?._id);
+      let photoPath = "";
+      if (newPost.photo) {
+        photoPath = await filesService.uploadFile(newPost.photo);
+      }
+      const addedPost = await postsService.addPost(
+        { title: newPost?.title, content: newPost?.content, photo: photoPath } as IPost,
+        user?._id
+      );
       setPosts([...posts, addedPost]);
     } catch (error: any) {
       toast(error.response.data, {
@@ -48,7 +56,12 @@ export const Home: React.FC<{}> = () => {
         <PostsContainer posts={posts} />
         <AddNewPost onSave={addNewPost} />
       </StyledHome>
-      <ToastContainer />
+      <ToastContainer
+        autoClose={3000} // Closes after 3 seconds
+        closeOnClick // Enables click-to-close
+        pauseOnHover={false} // Prevents staying open on hover
+      />
+      ;
     </>
   );
 };
