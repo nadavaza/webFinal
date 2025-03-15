@@ -190,6 +190,6 @@ router.post("/logout", authController.logout);
  *             schema:
  *               $ref: '#/components/schemas/User'
  */
-router.put("/edit", authMiddleware, authController.editUserDetails);
+router.put("/edit", authMiddleware, authController.editUser);
 
 export default router;

@@ -9,7 +9,6 @@ export const StyledProfile = styled("div")(() => ({
   flexDirection: "column",
   justifyContent: "center",
   alignItems: "center",
-  marginTop: "4rem",
   gap: "2rem",
 }));
 

@@ -2,6 +2,7 @@ export const HOME_TEXTS = {
   TITLE: "Daily NBA",
   LOG_OUT: "Log Out",
   MY_PORFILE: "My Profile",
+  GET_AI_POST: "Get AI Posts",
 };
 
 export const ADD_NEW_POST_TEXTS = {

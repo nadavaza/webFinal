@@ -26,7 +26,7 @@ export const Post: React.FC<{
   const navigate = useNavigate();
 
   const goToPost = () => {
-    navigate(`/post/${post._id}`);
+    !post.isAi && navigate(`/post/${post._id}`);
   };
 
   return (

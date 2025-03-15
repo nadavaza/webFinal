@@ -9,7 +9,9 @@ export const StyledHome = styled("div")(() => ({
   height: "100%",
 }));
 
-export const StyledLogo = styled("img")(() => ({
-  height: "5rem",
-  width: "5rem",
+export const StyledAiLogo = styled("img")(() => ({
+  height: "2rem",
+  width: "2rem",
+  marginLeft: "1rem",
+  borderRadius: "10%",
 }));

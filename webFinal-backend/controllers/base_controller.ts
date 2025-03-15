@@ -88,7 +88,7 @@ class BaseController<T> {
     try {
       let item = await this.model.create(body);
       if (item && populationFields && populationFields.length > 0) {
-        item = await this.model.findById(item._id).populate(populationFields) ?? item;
+        item = (await this.model.findById(item._id).populate(populationFields)) ?? item;
       }
       res.status(201).send(item);
     } catch (error) {
@@ -119,8 +119,6 @@ class BaseController<T> {
       res.status(400).send(error);
     }
   }
-
-
 
   async deleteItem(req: Request, res: Response) {
     const id = req.params.id;

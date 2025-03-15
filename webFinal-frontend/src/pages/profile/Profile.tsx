@@ -185,7 +185,6 @@ export const Profile: React.FC<{}> = ({}) => {
         closeOnClick // Enables click-to-close
         pauseOnHover={false} // Prevents staying open on hover
       />
-      ;
     </>
   );
 };

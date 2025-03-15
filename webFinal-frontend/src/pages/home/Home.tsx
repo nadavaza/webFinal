@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { INewPost, IPost } from "../../types/posts.types";
 import postsService from "../../services/posts-service";
-import { StyledHome } from "./home.styles";
+import { StyledAiLogo, StyledHome } from "./home.styles";
 import { toast, ToastContainer } from "react-toastify";
 import { AddNewPost } from "../../components/addNewPost/AddNewPost";
 import { useUserStore } from "../../store/userStore";
 import { useLoaderStore } from "../../store/loaderStore";
 import { PostsContainer } from "../../components/postsContainer/PostsContainer";
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { HOME_TEXTS } from "../../consts/homeConsts";
 import filesService from "../../services/files-service";
+import aiService from "../../services/ai-service";
+import chatgpt from "../../assets/chatgpt.webp";
 
 export const Home: React.FC<{}> = () => {
   const [posts, setPosts] = useState<IPost[]>([]);
@@ -21,7 +23,6 @@ export const Home: React.FC<{}> = () => {
       const fetchedPosts = await postsService.getPosts();
       setPosts(fetchedPosts);
     };
-
     fetchPosts();
   }, []);
 
@@ -47,21 +48,38 @@ export const Home: React.FC<{}> = () => {
     setIsloading(false);
   };
 
+  const getAiPosts = async () => {
+    const aiPosts = await aiService.getAiPosts();
+
+    const updatedPosts = aiPosts.map((post) => ({
+      ...post,
+      _id: "",
+      photo: chatgpt,
+      date: Date.now(),
+      isAi: true,
+    }));
+    setPosts([...posts, ...updatedPosts]);
+  };
+
   return (
     <>
       <Typography variant="h1" color="primary">
         {HOME_TEXTS.TITLE}
       </Typography>
+      <Button variant="contained" color="success" onClick={getAiPosts}>
+        {HOME_TEXTS.GET_AI_POST}
+        <StyledAiLogo src={chatgpt} />
+      </Button>
       <StyledHome>
         <PostsContainer posts={posts} />
         <AddNewPost onSave={addNewPost} />
       </StyledHome>
+
       <ToastContainer
         autoClose={3000} // Closes after 3 seconds
         closeOnClick // Enables click-to-close
         pauseOnHover={false} // Prevents staying open on hover
       />
-      ;
     </>
   );
 };

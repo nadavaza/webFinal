@@ -98,7 +98,7 @@ export const AddNewPost: React.FC<{ onSave: (data: INewPost) => void }> = ({ onS
               </Button>
               {preview && (
                 <StyledImgPreview>
-                  <img src={preview} alt="Preview" width={300} />
+                  <img src={preview} alt="Preview" width={300} height={300} />
                   <StyledCloseEdit color="primary" onClick={handleDeleteImage}>
                     <CloseIcon />
                   </StyledCloseEdit>

@@ -192,7 +192,6 @@ export const LoginPage: React.FC<{}> = () => {
         closeOnClick // Enables click-to-close
         pauseOnHover={false} // Prevents staying open on hover
       />
-      ;
     </>
   );
 };

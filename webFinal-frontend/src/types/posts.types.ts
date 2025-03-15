@@ -10,6 +10,7 @@ export interface IPost {
   date: string;
   comments: IComment[];
   likes: IUser[];
+  isAi: boolean;
 }
 
 export interface INewPost {

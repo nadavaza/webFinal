@@ -25,16 +25,16 @@ class UsersService {
       throw error;
     }
   }
-  async logout(refreshToken: string): Promise<IUser> {
+  async logout(): Promise<IUser> {
     try {
-      return (await apiClient.post("/auth/logout", { refreshToken })).data;
+      return (await apiClient.post("/auth/logout")).data;
     } catch (error: any) {
       throw error;
     }
   }
-  async refresh(refreshToken: string): Promise<IUser> {
+  async refresh(): Promise<IUser> {
     try {
-      return (await apiClient.post<IUser>("/auth/refresh", { refreshToken })).data;
+      return (await apiClient.post<IUser>("/auth/refresh", {}, { withCredentials: true })).data;
     } catch (error: any) {
       throw error;
     }

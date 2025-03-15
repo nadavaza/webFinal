@@ -34,16 +34,6 @@ class PostsController extends BaseController<IPost> {
       res.status(400).send(error);
     }
   }
-
-  // async getAiGeneratedPosts() {
-  //   const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-  //   const prompt = "Give me 10 posts about the NBA today in a format of an array including a title and content.";
-
-  //   const result = await model.generateContent(prompt);
-
-  //   return JSON.parse(result.response.text());
-  // }
 }
 
 export default new PostsController();

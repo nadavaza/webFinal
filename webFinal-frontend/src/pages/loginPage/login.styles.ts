@@ -9,7 +9,6 @@ export const StyledLogin = styled("div")(() => ({
   justifyContent: "center",
   alignItems: "center",
   flexDirection: "column",
-  marginTop: "4rem",
 }));
 
 export const StyledLoginLogo = styled("img")(() => ({

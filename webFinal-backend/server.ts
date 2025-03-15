@@ -7,12 +7,21 @@ import postsRoute from "./routes/posts_route";
 import commentsRoute from "./routes/comments_route";
 import authRoutes from "./routes/auth_route";
 import fileRoute from "./routes/file_route";
+import aiRoute from "./routes/ai_route";
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUI from "swagger-ui-express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
+
+const corsOptions = {
+  origin: "http://localhost:5173", // Allow requests from your frontend
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true, // Allow credentials (cookies, authorization headers)
+};
 
 const app = express();
-app.use(cors());
+app.use(cookieParser());
+app.use(cors(corsOptions));
 app.use("/public", express.static("public"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -20,6 +29,7 @@ app.use("/posts", postsRoute);
 app.use("/comments", commentsRoute);
 app.use("/auth", authRoutes);
 app.use("/files", fileRoute);
+app.use("/ai", aiRoute);
 
 const options = {
   definition: {

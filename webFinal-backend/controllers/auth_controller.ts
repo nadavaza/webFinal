@@ -2,79 +2,19 @@ import { NextFunction, Request, Response } from "express";
 import userModel, { IUser } from "../models/users_model";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { Document } from "mongoose";
 import { OAuth2Client } from "google-auth-library";
-
-type tTokens = {
-  accessToken: string;
-  refreshToken: string;
-};
-
-type tUser = Document<unknown, {}, IUser> &
-  IUser &
-  Required<{
-    _id: string;
-  }> & {
-    __v: number;
-  };
 
 type Payload = {
   _id: string;
 };
 
-const register = async (req: Request, res: Response) => {
-  const existingUser = await userModel.findOne({ email: req.body.email });
-  if (existingUser) {
-    res.status(400).send("user already exists");
-    return;
-  }
-  try {
-    const password = req.body.password;
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-    const user = await userModel.create({
-      email: req.body.email,
-      userName: req.body.userName,
-      password: hashedPassword,
-      photo: req.body.photo,
-    });
-    /* istanbul ignore next */
-    if (!process.env.TOKEN_SECRET) {
-      res.status(500).send("Server Error");
-      return;
-    }
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-    const tokens = generateToken(user._id);
-    if (!tokens) {
-      res.status(500).send("Server Error");
-      return;
-    }
-    if (!user.refreshToken) {
-      user.refreshToken = [];
-    }
-    user.refreshToken.push(tokens.refreshToken);
-    await user.save();
-    res.status(200).send({
-      _id: user._id,
-      email: user.email,
-      userName: user.userName,
-      photo: user.photo,
-      accessToken: tokens.accessToken,
-      refreshToken: tokens.refreshToken,
-    });
-  } catch (err) {
-    res.status(400).send(err);
-  }
-};
-
-const generateToken = (userId: string): tTokens | null => {
-  /* istanbul ignore next */
-  if (!process.env.TOKEN_SECRET) {
-    return null;
-  }
+const generateAccessToken = (userId: string): string => {
+  if (!process.env.TOKEN_SECRET) throw new Error("TOKEN_SECRET is missing");
 
   const random = Math.random().toString();
-  const accessToken = jwt.sign(
+  return jwt.sign(
     {
       _id: userId,
       random: random,
@@ -82,8 +22,14 @@ const generateToken = (userId: string): tTokens | null => {
     process.env.TOKEN_SECRET,
     { expiresIn: process.env.TOKEN_EXPIRES }
   );
+};
 
-  const refreshToken = jwt.sign(
+const generateRefreshToken = (userId: string): string => {
+  if (!process.env.TOKEN_SECRET) throw new Error("TOKEN_SECRET is missing");
+
+  const random = Math.random().toString();
+
+  return jwt.sign(
     {
       _id: userId,
       random: random,
@@ -91,59 +37,87 @@ const generateToken = (userId: string): tTokens | null => {
     process.env.TOKEN_SECRET,
     { expiresIn: process.env.REFRESH_TOKEN_EXPIRES }
   );
-  return {
-    accessToken: accessToken,
-    refreshToken: refreshToken,
-  };
 };
 
-const login = async (req: Request, res: Response) => {
-  try {
-    const user = await userModel.findOne({ email: req.body.email });
-    if (!user) {
-      res.status(400).send("wrong email or password");
-      return;
-    }
-    const validPassword = await bcrypt.compare(req.body.password, user.password);
-    if (!validPassword) {
-      res.status(400).send("wrong email or password");
-      return;
-    }
-    /* istanbul ignore next */
-    if (!process.env.TOKEN_SECRET) {
-      res.status(500).send("Server Error");
-      return;
-    }
+const register = async (req: Request, res: Response) => {
+  const existingUser = await userModel.findOne({ email: req.body.email });
+  if (existingUser) {
+    res.status(400).send("User already exists");
+    return;
+  }
 
-    const tokens = generateToken(user._id);
-    if (!tokens) {
+  try {
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    const user = await userModel.create({
+      email: req.body.email,
+      userName: req.body.userName,
+      password: hashedPassword,
+      photo: req.body.photo,
+    });
+
+    const accessToken = generateAccessToken(user._id);
+    const refreshToken = generateRefreshToken(user._id);
+    if (!accessToken || !refreshToken) {
       res.status(500).send("Server Error");
       return;
     }
-    if (!user.refreshToken) {
-      user.refreshToken = [];
-    }
-    user.refreshToken.push(tokens.refreshToken);
-    console.log(user.photo);
 
     await user.save();
-    res.status(200).send({
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.status(200).json({
       _id: user._id,
       email: user.email,
       userName: user.userName,
       photo: user.photo,
-      accessToken: tokens.accessToken,
-      refreshToken: tokens.refreshToken,
+      accessToken: accessToken,
     });
   } catch (err) {
     res.status(400).send(err);
   }
 };
 
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const login = async (req: Request, res: Response) => {
+  const user = await userModel.findOne({ email: req.body.email });
+  if (!user || !(await bcrypt.compare(req.body.password, user.password))) {
+    res.status(400).send("wrong email or password");
+    return;
+  }
+
+  const accessToken = generateAccessToken(user._id);
+  const refreshToken = generateRefreshToken(user._id);
+  if (!accessToken || !refreshToken) {
+    res.status(500).send("Server Error");
+    return;
+  }
+
+  user.refreshToken = refreshToken;
+  await user.save();
+
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true, // Ensures that JavaScript cannot access this cookie
+    secure: process.env.NODE_ENV === "production", // Only send over HTTPS in production
+    sameSite: "strict", // Ensures the cookie is sent in a first-party context
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  });
+
+  res.status(200).json({
+    _id: user._id,
+    email: user.email,
+    userName: user.userName,
+    photo: user.photo,
+    accessToken: accessToken,
+  });
+};
 
 const googleSignin = async (req: Request, res: Response) => {
-  const credential = req.body.credential;
+  const { credential } = req.body;
 
   if (!credential) {
     res.status(400).send("Missing credential in request body");
@@ -162,105 +136,63 @@ const googleSignin = async (req: Request, res: Response) => {
       return;
     }
 
-    const email = payload?.email;
+    const email = payload.email;
     let user = await userModel.findOne({ email });
 
     if (!user) {
       user = await userModel.create({
         email,
-        userName: payload?.name,
-        photo: payload?.picture,
-        password: "google-signin",
+        userName: payload.name,
+        photo: payload.picture,
+        password: "",
       });
     }
 
-    const tokens = generateToken(user._id);
-    if (!tokens) {
+    const accessToken = generateAccessToken(user._id);
+    const refreshToken = generateRefreshToken(user._id);
+    if (!accessToken || !refreshToken) {
       res.status(500).send("Server Error");
       return;
     }
-    if (!user.refreshToken) {
-      user.refreshToken = [];
-    }
-    user.refreshToken.push(tokens.refreshToken);
 
+    user.refreshToken = refreshToken;
     await user.save();
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true, // Ensures that JavaScript cannot access this cookie
+      secure: process.env.NODE_ENV === "production", // Only send over HTTPS in production
+      sameSite: "strict", // Ensures the cookie is sent in a first-party context
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
 
     res.status(200).send({
       _id: user._id,
       email: user.email,
       userName: user.userName,
       photo: user.photo,
-      accessToken: tokens.accessToken,
-      refreshToken: tokens.refreshToken,
+      accessToken: accessToken,
     });
   } catch (error) {
     res.status(400).send("Error verifying Google credential");
   }
 };
 
-/* istanbul ignore next */
-const verifyRefreshToken = (refreshToken: string | undefined) => {
-  return new Promise<tUser>((resolve, reject) => {
-    if (!refreshToken) {
-      reject("fail");
-      return;
-    }
-
-    if (!process.env.TOKEN_SECRET) {
-      reject("fail");
-      return;
-    }
-    jwt.verify(refreshToken, process.env.TOKEN_SECRET, async (err: any, payload: any) => {
-      if (err) {
-        reject("fail");
-        return;
-      }
-
-      const userId = payload._id;
-      try {
-        const user = await userModel.findById(userId);
-        if (!user) {
-          reject("fail");
-          return;
-        }
-        if (!user.refreshToken || !user.refreshToken.includes(refreshToken)) {
-          user.refreshToken = [];
-          await user.save();
-          reject("fail");
-          return;
-        }
-        const tokens = user.refreshToken!.filter((token) => token !== refreshToken);
-        user.refreshToken = tokens;
-
-        resolve(user);
-      } catch (err) {
-        reject("fail");
-        return;
-      }
-    });
-  });
-};
-
 const logout = async (req: Request, res: Response) => {
-  try {
-    const user = await verifyRefreshToken(req.body.refreshToken);
-    await user.save();
-    res.status(200).send("success");
-  } catch (err) {
-    res.status(400).send("fail");
-  }
+  res.clearCookie("refreshToken", { httpOnly: true, secure: true, sameSite: "strict" });
+  res.status(200).send("success");
 };
 
-const editUserDetails = async (req: Request, res: Response) => {
+const editUser = async (req: Request, res: Response) => {
   const existingUser = await userModel.findOne({ email: req.body.email });
   if (!existingUser) {
     res.status(400).send("user not found");
     return;
   }
+
   existingUser.userName = req.body.userName;
   existingUser.photo = req.body.photo;
   await existingUser.save();
+
   res.status(200).send({
     _id: existingUser._id,
     email: existingUser.email,
@@ -271,28 +203,35 @@ const editUserDetails = async (req: Request, res: Response) => {
 
 const refresh = async (req: Request, res: Response) => {
   try {
-    const user = await verifyRefreshToken(req.body.refreshToken);
+    console.log(req.cookies);
+
+    const refreshToken = req.cookies.refreshToken;
+
+    if (!refreshToken) {
+      res.status(400).send("fail");
+      return;
+    }
+
+    if (!process.env.TOKEN_SECRET) {
+      res.status(500).send("Server Error");
+      return;
+    }
+
+    const payload = jwt.verify(refreshToken, process.env.TOKEN_SECRET) as { _id: string };
+    const newAccessToken = generateAccessToken(payload._id);
+    const user = await userModel.findById(payload._id);
+
     if (!user) {
       res.status(400).send("fail");
       return;
     }
-    const tokens = generateToken(user._id);
 
-    if (!tokens) {
-      res.status(500).send("Server Error");
-      return;
-    }
-    if (!user.refreshToken) {
-      user.refreshToken = [];
-    }
-    user.refreshToken.push(tokens.refreshToken);
-    await user.save();
     res.status(200).send({
       _id: user._id,
       email: user.email,
       userName: user.userName,
-      accessToken: tokens.accessToken,
-      refreshToken: tokens.refreshToken,
+      photo: user.photo,
+      accessToken: newAccessToken,
     });
   } catch (err) {
     res.status(400).send("fail");
@@ -300,8 +239,8 @@ const refresh = async (req: Request, res: Response) => {
 };
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  const authorization = req.header("authorization");
-  const token = authorization && authorization.split(" ")[1];
+  const authHeader = req.header("Authorization");
+  const token = authHeader && authHeader.split(" ")[1];
 
   if (!token) {
     res.status(401).send("Access Denied");
@@ -328,6 +267,6 @@ export default {
   login,
   refresh,
   logout,
-  editUserDetails,
+  editUser,
   googleSignin,
 };

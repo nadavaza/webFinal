@@ -3,8 +3,8 @@ import { useParams } from "react-router";
 import { IPost } from "../../types/posts.types";
 import postsService from "../../services/posts-service";
 import {
-  StyledDeletePost,
   StyledPost,
+  StyledPostActions,
   StyledPostComments,
   StyledPostContent,
   StyledPostContentTypography,
@@ -29,14 +29,18 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { CommentsContainer } from "../../components/commentsContainer/CommentsContainer";
 import noImage from "../../assets/noImage.jpg";
 import commentsService from "../../services/comments-service";
+import EditIcon from "@mui/icons-material/Edit";
+import CloseIcon from "@mui/icons-material/Close";
+import SaveIcon from "@mui/icons-material/Save";
 
 export const PostPage: React.FC<{}> = () => {
   const { postId } = useParams();
   const { user } = useUserStore();
   const navigate = useNavigate();
+  const { setIsloading } = useLoaderStore();
   const [showConfirm, setShowConfirm] = useState<boolean>(false);
   const [post, setPost] = useState<IPost>();
-  const { setIsloading } = useLoaderStore();
+  const [isEdit, setIsEdit] = useState<boolean>(false);
 
   const isPostLiked = useMemo<boolean>(() => {
     return post?.likes?.find((like) => like?._id === user?._id) !== undefined;
@@ -127,16 +131,33 @@ export const PostPage: React.FC<{}> = () => {
     <>
       <StyledPostPage>
         <StyledPost>
-          <div>
+          <StyledPostActions>
             {isUsersPost && (
-              <StyledDeletePost onClick={deletePost}>
-                <DeleteIcon color="primary" />
-              </StyledDeletePost>
+              <>
+                {!isEdit ? (
+                  <>
+                    <IconButton onClick={() => setIsEdit(true)}>
+                      <EditIcon color="primary" />
+                    </IconButton>
+                    <IconButton onClick={deletePost}>
+                      <DeleteIcon color="primary" />
+                    </IconButton>
+                  </>
+                ) : (
+                  <>
+                    <IconButton>
+                      <SaveIcon color="primary" />
+                    </IconButton>
+                    <IconButton onClick={() => setIsEdit(false)}>
+                      <CloseIcon color="primary" />
+                    </IconButton>
+                  </>
+                )}
+              </>
             )}
-          </div>
+          </StyledPostActions>
           <StyledPostOwner>
             <Avatar>
-              {" "}
               {post?.owner?.photo ? (
                 <img src={post?.owner?.photo} alt="Preview" width={"100%"} height={"100%"} />
               ) : (
@@ -191,7 +212,6 @@ export const PostPage: React.FC<{}> = () => {
         closeOnClick // Enables click-to-close
         pauseOnHover={false} // Prevents staying open on hover
       />
-      ;
     </>
   );
 };

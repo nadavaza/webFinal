@@ -167,6 +167,58 @@ router.post(
 
 /**
  * @swagger
+ * /posts:
+ *   update:
+ *     summary: update a post
+ *     description: update a post
+ *     tags:
+ *       - Posts
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 description: The title of the post
+ *               content:
+ *                 type: string
+ *                 description: The content of the post
+ *               owner:
+ *                 type: string
+ *                 description: The owner of the post
+ *             required:
+ *               - title
+ *               - content
+ *               - owners
+ *     responses:
+ *       201:
+ *         description: Post created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Post'
+ *       400:
+ *         description: Invalid input
+ *       500:
+ *         description: Server error
+ */
+router.put(
+  "/",
+  authMiddleware,
+  postsController.updateHandler(postsController, [
+    { path: "owner", select: "userName photo" },
+    { path: "comments", select: "", populate: { path: "owner", select: "" } },
+    { path: "likes", select: "userName" },
+  ])
+);
+
+/**
+ * @swagger
  * posts/{id}:
  *   delete:
  *     summary: Delete a post by ID

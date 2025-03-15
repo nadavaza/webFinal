@@ -7,8 +7,7 @@ import { NavBar } from "./components/navBar/NavBar";
 import { Loader } from "./components/loader/Loader";
 import { useLoaderStore } from "./store/loaderStore";
 import { useEffect } from "react";
-import { toast, ToastContainer } from "react-toastify";
-import { getTokens, setTokens } from "./services/token-service";
+import { setTokens } from "./services/token-service";
 import usersService from "./services/users-service";
 import { useUserStore } from "./store/userStore";
 
@@ -29,16 +28,14 @@ function App() {
   useEffect(() => {
     const refreshUser = async (): Promise<void> => {
       try {
-        if (getTokens().refreshToken) {
-          const refreshedUser = await usersService.refresh(getTokens().refreshToken);
-          if (refreshedUser) {
-            setTokens(refreshedUser.accessToken!!, refreshedUser.refreshToken!!);
-            setUser(refreshedUser);
-            navigate("/home");
-          }
+        const refreshedUser = await usersService.refresh();
+        if (refreshedUser) {
+          setTokens(refreshedUser?.accessToken ?? "");
+          setUser(refreshedUser);
+          navigate("/home");
         }
       } catch (error: any) {
-        setTokens("", "");
+        setTokens("");
         navigate("/login");
       }
     };

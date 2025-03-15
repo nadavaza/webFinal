@@ -13,7 +13,6 @@ export const StyledPost = styled("div")(() => ({
   width: "90%",
   textAlign: "left",
   position: "relative",
-  padding: "2rem",
 }));
 
 export const StyledPostContent = styled("div")(() => ({
@@ -59,7 +58,7 @@ export const StyledPostLikes = styled("div")(() => ({
   alignItems: "center",
 }));
 
-export const StyledDeletePost = styled(IconButton)(() => ({
+export const StyledPostActions = styled("div")(() => ({
   position: "absolute !important",
   right: "0",
 }));
