@@ -39,7 +39,7 @@ const options = {
       version: "1.0.0",
       description: "REST server including authentication using JWT",
     },
-    servers: [{ url: "http://localhost:3000" }],
+    servers: [{ url: `http://localhost:${process.env.PORT}` }, { url: `https://node121.cs.colman.ac.il` }],
   },
   apis: ["./routes/*.ts"],
 };
