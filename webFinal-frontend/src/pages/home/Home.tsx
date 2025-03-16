@@ -47,6 +47,7 @@ export const Home: React.FC<{}> = () => {
         position: "bottom-center",
         type: "error",
         delay: 500,
+        theme: "colored",
       });
     }
     setIsloading(false);

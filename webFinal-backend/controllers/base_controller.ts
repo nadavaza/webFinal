@@ -108,8 +108,6 @@ class BaseController<T> {
 
   async update(req: Request, res: Response, populationFields: IPopulationField[]) {
     const id = req.params.id;
-    console.log(req.params.id);
-    
     const body = req.body;
     try {
       let item = await this.model.findByIdAndUpdate(id, body);

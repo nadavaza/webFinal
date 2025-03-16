@@ -64,12 +64,12 @@ export const LoginPage: React.FC<{}> = () => {
         ? await usersService.login(user as IUser)
         : await usersService.register({ ...user, photo: photoPath } as IUser);
       if (loggedUser) {
-        setTokens(loggedUser.accessToken!!, loggedUser.refreshToken!!);
+        setTokens(loggedUser.accessToken!!);
         setUser(loggedUser);
         navigate("/home");
       }
     } catch (error: any) {
-      toast(error.response.data, { position: "bottom-center", type: "error", delay: 500 });
+      toast(error.response.data, { position: "bottom-center", type: "error", delay: 500, theme: "colored" });
     }
   });
 
@@ -81,13 +81,13 @@ export const LoginPage: React.FC<{}> = () => {
   const googleSuccess = async (credentialResponse: CredentialResponse): Promise<void> => {
     const googleUser = await usersService.googleSignin(credentialResponse);
     if (googleUser) {
-      setTokens(googleUser.accessToken!!, googleUser.refreshToken!!);
+      setTokens(googleUser.accessToken!!);
       setUser(googleUser);
       navigate("/home");
     }
   };
   const googleError = (): void => {
-    toast(LOGIN_TEXTS.GOOGLE_ERROR, { position: "bottom-center", type: "error", delay: 500 });
+    toast(LOGIN_TEXTS.GOOGLE_ERROR, { position: "bottom-center", type: "error", delay: 500, theme: "colored" });
   };
 
   return (

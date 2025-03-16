@@ -208,7 +208,7 @@ router.post(
  *         description: Server error
  */
 router.put(
-  "/",
+  "/:id",
   authMiddleware,
   postsController.updateHandler(postsController, [
     { path: "owner", select: "userName photo" },

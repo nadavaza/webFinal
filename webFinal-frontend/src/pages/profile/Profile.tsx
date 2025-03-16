@@ -60,45 +60,43 @@ export const Profile: React.FC<{}> = ({}) => {
     setValue("photo", null as any);
   };
 
-  const onSubmit = handleSubmit(
-    async (editedUserFields: IProfileUser): Promise<void> => {
-      try {
-        setIsloading(true);
-        let photoPath = "";
-        if (editedUserFields.photo instanceof File) {
-          photoPath = await filesService.uploadFile(editedUserFields.photo);
-        }
-        const editedUser = await usersService.edituser({
-          ...editedUserFields,
-          email: user.email,
-          password: "",
-          photo: photoPath || user.photo,
-        } as IUser);
-        setUser({
-          ...user,
-          userName: editedUser.userName,
-          photo: editedUser.photo,
-        });
-        const fetchedUserPosts = await postsService.getPostsByOwner(user._id);
-        setUserPosts(fetchedUserPosts);
-        toast(PROFILE_TEXTS.PROFILE_EDIT_SUCCESS, {
-          position: "bottom-center",
-          type: "success",
-          delay: 500,
-          theme: "colored",
-        });
-      } catch (error: any) {
-        toast(error.response.data, {
-          position: "bottom-center",
-          type: "error",
-          delay: 500,
-          theme: "colored",
-        });
+  const onSubmit = handleSubmit(async (editedUserFields: IProfileUser): Promise<void> => {
+    try {
+      setIsloading(true);
+      let photoPath = "";
+      if (editedUserFields.photo instanceof File) {
+        photoPath = await filesService.uploadFile(editedUserFields.photo);
       }
-      setIsEdit(false);
-      setIsloading(false);
+      const editedUser = await usersService.edituser({
+        ...editedUserFields,
+        email: user.email,
+        password: "",
+        photo: photoPath || user.photo,
+      } as IUser);
+      setUser({
+        ...user,
+        userName: editedUser.userName,
+        photo: editedUser.photo,
+      });
+      const fetchedUserPosts = await postsService.getPostsByOwner(user._id);
+      setUserPosts(fetchedUserPosts);
+      toast(PROFILE_TEXTS.PROFILE_EDIT_SUCCESS, {
+        position: "bottom-center",
+        type: "success",
+        delay: 500,
+        theme: "colored",
+      });
+    } catch (error: any) {
+      toast(error.response.data, {
+        position: "bottom-center",
+        type: "error",
+        delay: 500,
+        theme: "colored",
+      });
     }
-  );
+    setIsEdit(false);
+    setIsloading(false);
+  });
 
   const closeEdit = (): void => {
     setIsEdit(false);
@@ -146,19 +144,9 @@ export const Profile: React.FC<{}> = ({}) => {
               <StyledProfileImgContainer>
                 <StyledProfileImg>
                   {preview ? (
-                    <img
-                      src={preview}
-                      alt="Preview"
-                      width={"100%"}
-                      height={"100%"}
-                    />
+                    <img src={preview} alt="Preview" width={"100%"} height={"100%"} />
                   ) : user.photo ? (
-                    <img
-                      src={user.photo}
-                      alt="Preview"
-                      width={"100%"}
-                      height={"100%"}
-                    />
+                    <img src={user.photo} alt="Preview" width={"100%"} height={"100%"} />
                   ) : (
                     <StyledProfileIcon />
                   )}
@@ -166,12 +154,7 @@ export const Profile: React.FC<{}> = ({}) => {
                 {isEdit && (
                   <StyledProfileActions>
                     <StyledProfileEdit color="primary" onClick={selectPhoto} />
-                    {preview && (
-                      <StyledProfileClose
-                        color="primary"
-                        onClick={handleDeleteImage}
-                      />
-                    )}
+                    {preview && <StyledProfileClose color="primary" onClick={handleDeleteImage} />}
                   </StyledProfileActions>
                 )}
               </StyledProfileImgContainer>
@@ -179,13 +162,7 @@ export const Profile: React.FC<{}> = ({}) => {
                 name="userName"
                 control={control}
                 render={({ field }) => (
-                  <TextField
-                    required
-                    {...field}
-                    label={field.name}
-                    variant="outlined"
-                    disabled={!isEdit}
-                  />
+                  <TextField required {...field} label={field.name} variant="outlined" disabled={!isEdit} />
                 )}
               />
               {isEdit && (

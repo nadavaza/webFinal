@@ -141,7 +141,7 @@ const googleSignin = async (req: Request, res: Response) => {
         email,
         userName: payload.name,
         photo: payload.picture,
-        password: "",
+        password: "google-signin",
       });
     }
 

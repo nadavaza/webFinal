@@ -19,14 +19,7 @@ import { ConfirmToast } from "react-confirm-toast";
 import { POST_TEXTS } from "../../consts/postConsts";
 import { useNavigate } from "react-router";
 import { useLoaderStore } from "../../store/loaderStore";
-import {
-  Avatar,
-  Button,
-  IconButton,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Avatar, Button, IconButton, Stack, TextField, Typography } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import { formatDate } from "../../utils/dateUtils";
 import CommentIcon from "@mui/icons-material/Comment";
@@ -67,7 +60,7 @@ export const PostPage: React.FC<{}> = () => {
   }, [post]);
 
   const isUsersPost = useMemo<boolean>(() => {
-    return user._id === post?.owner._id;
+    return user._id === post?.owner?._id;
   }, [post]);
 
   useEffect(() => {
@@ -99,10 +92,10 @@ export const PostPage: React.FC<{}> = () => {
     setValue("photo", post?.photo as any);
   };
 
-  const onSubmit = async (data: any): Promise<void> => {
+  const onSubmit = async (data: any, e: any): Promise<void> => {
     try {
       setIsloading(true);
-      const updatedPost = await postsService.updatePost(data);
+      const updatedPost = await postsService.updatePost({ ...post, ...data });
       setPost(updatedPost);
       toast(POST_TEXTS.POST_UPDATED, {
         position: "bottom-center",
@@ -110,6 +103,7 @@ export const PostPage: React.FC<{}> = () => {
         delay: 500,
         theme: "colored",
       });
+      setIsEdit(false);
     } catch (error: any) {
       toast(error.response.data, {
         position: "bottom-center",
@@ -153,9 +147,7 @@ export const PostPage: React.FC<{}> = () => {
     try {
       const { isLiked } = await postsService.likePost(postId!!, user._id);
       if (post) {
-        const updatedLikes = isLiked
-          ? [...post.likes, user]
-          : post.likes.filter((like) => like._id !== user._id);
+        const updatedLikes = isLiked ? [...post.likes, user] : post.likes.filter((like) => like._id !== user._id);
         setPost({ ...post, likes: updatedLikes });
       }
     } catch (error: any) {
@@ -204,19 +196,29 @@ export const PostPage: React.FC<{}> = () => {
                 <>
                   {!isEdit ? (
                     <>
-                      <IconButton type="button" onClick={() => setIsEdit(true)}>
+                      <IconButton
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault(), setIsEdit(true);
+                        }}
+                      >
                         <EditIcon color="primary" />
                       </IconButton>
-                      <IconButton onClick={deletePost}>
+                      <IconButton type="button" onClick={deletePost}>
                         <DeleteIcon color="primary" />
                       </IconButton>
                     </>
                   ) : (
                     <>
-                      <IconButton type="submit">
+                      <IconButton
+                        type="submit"
+                        onClick={() => {
+                          console.log("save click");
+                        }}
+                      >
                         <SaveIcon color="primary" />
                       </IconButton>
-                      <IconButton onClick={handleClose}>
+                      <IconButton type="button" onClick={handleClose}>
                         <CloseIcon color="primary" />
                       </IconButton>
                     </>
@@ -227,12 +229,7 @@ export const PostPage: React.FC<{}> = () => {
             <StyledPostOwner>
               <Avatar>
                 {post?.owner?.photo ? (
-                  <img
-                    src={post?.owner?.photo}
-                    alt="Preview"
-                    width={"100%"}
-                    height={"100%"}
-                  />
+                  <img src={post?.owner?.photo} alt="Preview" width={"100%"} height={"100%"} />
                 ) : (
                   <PersonIcon />
                 )}
@@ -263,13 +260,7 @@ export const PostPage: React.FC<{}> = () => {
                     name="content"
                     control={control}
                     render={({ field }) => (
-                      <TextField
-                        {...field}
-                        label={ADD_NEW_POST_TEXTS.CONTENT}
-                        fullWidth
-                        multiline
-                        rows={4}
-                      />
+                      <TextField {...field} label={ADD_NEW_POST_TEXTS.CONTENT} fullWidth multiline rows={4} />
                     )}
                   />
                   <Controller
@@ -294,38 +285,19 @@ export const PostPage: React.FC<{}> = () => {
                       />
                     )}
                   />
-                  <Button
-                    variant="contained"
-                    component="label"
-                    fullWidth
-                    color="secondary"
-                    onClick={selectPhoto}
-                  >
+                  <Button variant="contained" component="label" fullWidth color="secondary" onClick={selectPhoto}>
                     {ADD_NEW_POST_TEXTS.UPLOAD_IMAGE}
                   </Button>
                   {preview ? (
                     <StyledImgPreview>
-                      <img
-                        src={preview}
-                        alt="Preview"
-                        width={300}
-                        height={300}
-                      />
-                      <StyledCloseEdit
-                        color="primary"
-                        onClick={handleDeleteImage}
-                      >
+                      <img src={preview} alt="Preview" width={300} height={300} />
+                      <StyledCloseEdit color="primary" onClick={handleDeleteImage}>
                         <CloseIcon />
                       </StyledCloseEdit>
                     </StyledImgPreview>
                   ) : (
                     <StyledImgPreview>
-                      <img
-                        src={post?.photo || noImage}
-                        alt="Preview"
-                        width={300}
-                        height={300}
-                      />
+                      <img src={post?.photo || noImage} alt="Preview" width={300} height={300} />
                     </StyledImgPreview>
                   )}
                 </Stack>
@@ -352,10 +324,7 @@ export const PostPage: React.FC<{}> = () => {
                 <CommentIcon color="secondary" />
               </StyledPostComments>
               <StyledPostLikes>
-                <Typography
-                  variant="body1"
-                  color={isPostLiked ? "success" : "primary"}
-                >
+                <Typography variant="body1" color={isPostLiked ? "success" : "primary"}>
                   {post?.likes?.length}
                 </Typography>
                 <IconButton onClick={likePost}>

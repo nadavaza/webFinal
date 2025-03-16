@@ -49,12 +49,11 @@ class PostsService {
       throw error;
     }
   }
-  async updatePost(updatePost: IPost): Promise<IPost> {
+  async updatePost(updatedPost: IPost): Promise<IPost> {
     try {
       return (
-        await apiClient.post<IPost>("/posts", updatePost, {
+        await apiClient.put<IPost>(`/posts/${updatedPost._id}`, updatedPost, {
           headers: { Authorization: `JWT ${getTokens().accessToken}` },
-          params: { id: updatePost._id },
         })
       ).data;
     } catch (error: any) {

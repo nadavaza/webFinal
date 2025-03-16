@@ -5,11 +5,11 @@ export interface IPost {
   _id: string;
   title: string;
   content?: string;
-  owner: IUser;
+  owner?: IUser;
   photo?: string;
   date: string;
-  comments: IComment[];
-  likes: IUser[];
+  comments?: IComment[];
+  likes?: IUser[];
   isAi: boolean;
 }
 

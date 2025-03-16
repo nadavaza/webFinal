@@ -69,9 +69,7 @@ describe("Auth API Tests", () => {
       .send(testUser);
     expect(response.statusCode).toBe(200);
     const accessToken = response.body.accessToken;
-    const refreshToken = response.body.refreshToken;
     expect(accessToken).toBeDefined();
-    expect(refreshToken).toBeDefined();
     expect(response.body._id).toBeDefined();
     testUser.accessToken = accessToken;
     testUser._id = response.body._id;
@@ -82,7 +80,6 @@ describe("Auth API Tests", () => {
       .post(baseUrl + "/login")
       .send(testUser);
     const accessToken = response.body.accessToken;
-    const refreshToken = response.body.refreshToken;
 
     expect(accessToken).not.toBe(testUser.accessToken);
   });
@@ -106,12 +103,10 @@ describe("Auth API Tests", () => {
   });
 
   test("Auth test refresh token", async () => {
-    const response = await request(app)
-      .post(baseUrl + "/refresh")
+    const response = await request(app).post(baseUrl + "/refresh");
 
     expect(response.statusCode).toBe(200);
     expect(response.body.accessToken).toBeDefined();
-    expect(response.body.refreshToken).toBeDefined();
     testUser.accessToken = response.body.accessToken;
   });
 
@@ -122,12 +117,10 @@ describe("Auth API Tests", () => {
     expect(response.statusCode).toBe(200);
     testUser.accessToken = response.body.accessToken;
 
-    const response2 = await request(app)
-      .post(baseUrl + "/logout")
+    const response2 = await request(app).post(baseUrl + "/logout");
     expect(response2.statusCode).toBe(200);
 
-    const response3 = await request(app)
-      .post(baseUrl + "/refresh")
+    const response3 = await request(app).post(baseUrl + "/refresh");
     expect(response3.statusCode).not.toBe(200);
   });
 });
