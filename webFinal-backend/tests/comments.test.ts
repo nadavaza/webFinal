@@ -51,7 +51,7 @@ beforeAll(async () => {
   testComment.content = "This is a test comment";
   testComment.postId = postId;
   if (testUser._id) {
-    testComment.owner = testUser._id;
+    testComment.owner.id = testUser._id;
   } else {
     throw new Error("User ID is undefined");
   }

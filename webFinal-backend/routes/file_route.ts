@@ -13,7 +13,6 @@ const storage = multer.diskStorage({
       .filter(Boolean) // removes empty extensions (e.g. `filename...txt`)
       .slice(1)
       .join(".");
-    console.log(ext);
 
     cb(null, Date.now() + "." + ext);
   },

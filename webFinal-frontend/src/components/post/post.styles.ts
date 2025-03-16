@@ -55,8 +55,8 @@ export const StyledPostLikes = styled("div")(() => ({
 }));
 
 export const StyledPostPhoto = styled("img")(() => ({
-  width: "8rem",
-  height: "8rem",
+  width: "10rem",
+  height: "10rem",
   borderRadius: "10%",
   objectFit: "fill",
 }));

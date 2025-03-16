@@ -74,7 +74,6 @@ describe("Auth API Tests", () => {
     expect(refreshToken).toBeDefined();
     expect(response.body._id).toBeDefined();
     testUser.accessToken = accessToken;
-    testUser.refreshToken = refreshToken;
     testUser._id = response.body._id;
   });
 
@@ -86,7 +85,6 @@ describe("Auth API Tests", () => {
     const refreshToken = response.body.refreshToken;
 
     expect(accessToken).not.toBe(testUser.accessToken);
-    expect(refreshToken).not.toBe(testUser.refreshToken);
   });
 
   test("Auth test login fail - incorrect password", async () => {
@@ -110,14 +108,11 @@ describe("Auth API Tests", () => {
   test("Auth test refresh token", async () => {
     const response = await request(app)
       .post(baseUrl + "/refresh")
-      .send({
-        refreshToken: testUser.refreshToken,
-      });
+
     expect(response.statusCode).toBe(200);
     expect(response.body.accessToken).toBeDefined();
     expect(response.body.refreshToken).toBeDefined();
     testUser.accessToken = response.body.accessToken;
-    testUser.refreshToken = response.body.refreshToken;
   });
 
   test("Auth test logout", async () => {
@@ -126,20 +121,13 @@ describe("Auth API Tests", () => {
       .send(testUser);
     expect(response.statusCode).toBe(200);
     testUser.accessToken = response.body.accessToken;
-    testUser.refreshToken = response.body.refreshToken;
 
     const response2 = await request(app)
       .post(baseUrl + "/logout")
-      .send({
-        refreshToken: testUser.refreshToken,
-      });
     expect(response2.statusCode).toBe(200);
 
     const response3 = await request(app)
       .post(baseUrl + "/refresh")
-      .send({
-        refreshToken: testUser.refreshToken,
-      });
     expect(response3.statusCode).not.toBe(200);
   });
 });

@@ -9,6 +9,13 @@ export const StyledHome = styled("div")(() => ({
   height: "100%",
 }));
 
+export const StyledHomeHeader = styled("div")(() => ({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+}));
+
 export const StyledAiLogo = styled("img")(() => ({
   height: "2rem",
   width: "2rem",

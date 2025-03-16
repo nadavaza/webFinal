@@ -3,4 +3,5 @@ export const POST_TEXTS = {
   POST_DELETED: "Post Deleted Successfully",
   COMMENTS: "Comments",
   ADD_COMMENT: "Add comment",
+  POST_UPDATED: 'Post updated'
 };

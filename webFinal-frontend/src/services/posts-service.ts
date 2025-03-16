@@ -5,8 +5,11 @@ import { getTokens } from "./token-service";
 class PostsService {
   async getPosts(): Promise<IPost[]> {
     try {
-      return (await apiClient.get<IPost[]>("/posts", { headers: { Authorization: `JWT ${getTokens().accessToken}` } }))
-        .data;
+      return (
+        await apiClient.get<IPost[]>("/posts", {
+          headers: { Authorization: `JWT ${getTokens().accessToken}` },
+        })
+      ).data;
     } catch (error: any) {
       throw error;
     }
@@ -40,6 +43,18 @@ class PostsService {
         await apiClient.post<IPost>("/posts", newPost, {
           headers: { Authorization: `JWT ${getTokens().accessToken}` },
           params: { userId },
+        })
+      ).data;
+    } catch (error: any) {
+      throw error;
+    }
+  }
+  async updatePost(updatePost: IPost): Promise<IPost> {
+    try {
+      return (
+        await apiClient.post<IPost>("/posts", updatePost, {
+          headers: { Authorization: `JWT ${getTokens().accessToken}` },
+          params: { id: updatePost._id },
         })
       ).data;
     } catch (error: any) {

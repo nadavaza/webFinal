@@ -65,10 +65,10 @@ const register = async (req: Request, res: Response) => {
     await user.save();
 
     res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      httpOnly: true, // Ensures that JavaScript cannot access this cookie
+      secure: process.env.NODE_ENV === "production", // Only send over HTTPS in production
+      sameSite: "strict", // Ensures the cookie is sent in a first-party context
+      maxAge: 15 * 60 * 1000, // 15 minutes (15 * 60 seconds * 1000 ms)
     });
 
     res.status(200).json({
@@ -97,14 +97,11 @@ const login = async (req: Request, res: Response) => {
     return;
   }
 
-  user.refreshToken = refreshToken;
-  await user.save();
-
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true, // Ensures that JavaScript cannot access this cookie
     secure: process.env.NODE_ENV === "production", // Only send over HTTPS in production
     sameSite: "strict", // Ensures the cookie is sent in a first-party context
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    maxAge: 15 * 60 * 1000, // 15 minutes (15 * 60 seconds * 1000 ms)
   });
 
   res.status(200).json({
@@ -155,14 +152,11 @@ const googleSignin = async (req: Request, res: Response) => {
       return;
     }
 
-    user.refreshToken = refreshToken;
-    await user.save();
-
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true, // Ensures that JavaScript cannot access this cookie
       secure: process.env.NODE_ENV === "production", // Only send over HTTPS in production
       sameSite: "strict", // Ensures the cookie is sent in a first-party context
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      maxAge: 15 * 60 * 1000, // 15 minutes (15 * 60 seconds * 1000 ms)
     });
 
     res.status(200).send({
@@ -203,8 +197,6 @@ const editUser = async (req: Request, res: Response) => {
 
 const refresh = async (req: Request, res: Response) => {
   try {
-    console.log(req.cookies);
-
     const refreshToken = req.cookies.refreshToken;
 
     if (!refreshToken) {
