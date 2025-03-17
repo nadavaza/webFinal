@@ -19,7 +19,14 @@ import { ConfirmToast } from "react-confirm-toast";
 import { POST_TEXTS } from "../../consts/postConsts";
 import { useNavigate } from "react-router";
 import { useLoaderStore } from "../../store/loaderStore";
-import { Avatar, Button, IconButton, Stack, TextField, Typography } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  IconButton,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import { formatDate } from "../../utils/dateUtils";
 import CommentIcon from "@mui/icons-material/Comment";
@@ -36,6 +43,7 @@ import { Controller, useForm } from "react-hook-form";
 import { StyledImgPreview } from "../../components/addNewPost/addNewPost.styles";
 import { ADD_NEW_POST_TEXTS } from "../../consts/homeConsts";
 import { StyledCloseEdit } from "../profile/profile.styles";
+import filesService from "../../services/files-service";
 
 export const PostPage: React.FC<{}> = () => {
   const { postId } = useParams();
@@ -95,7 +103,15 @@ export const PostPage: React.FC<{}> = () => {
   const onSubmit = async (data: any): Promise<void> => {
     try {
       setIsloading(true);
-      const updatedPost = await postsService.updatePost({ ...post, ...data });
+      let photoPath = "";
+      if (data.photo) {
+        photoPath = await filesService.uploadFile(data.photo);
+      }
+      const updatedPost = await postsService.updatePost({
+        ...post,
+        ...data,
+        photo: photoPath,
+      });
       setPost(updatedPost);
       toast(POST_TEXTS.POST_UPDATED, {
         position: "bottom-center",
@@ -231,7 +247,12 @@ export const PostPage: React.FC<{}> = () => {
             <StyledPostOwner>
               <Avatar>
                 {post?.owner?.photo ? (
-                  <img src={post?.owner?.photo} alt="Preview" width={"100%"} height={"100%"} />
+                  <img
+                    src={post?.owner?.photo}
+                    alt="Preview"
+                    width={"100%"}
+                    height={"100%"}
+                  />
                 ) : (
                   <PersonIcon />
                 )}
@@ -262,7 +283,13 @@ export const PostPage: React.FC<{}> = () => {
                     name="content"
                     control={control}
                     render={({ field }) => (
-                      <TextField {...field} label={ADD_NEW_POST_TEXTS.CONTENT} fullWidth multiline rows={4} />
+                      <TextField
+                        {...field}
+                        label={ADD_NEW_POST_TEXTS.CONTENT}
+                        fullWidth
+                        multiline
+                        rows={4}
+                      />
                     )}
                   />
                   <Controller
@@ -287,19 +314,38 @@ export const PostPage: React.FC<{}> = () => {
                       />
                     )}
                   />
-                  <Button variant="contained" component="label" fullWidth color="secondary" onClick={selectPhoto}>
+                  <Button
+                    variant="contained"
+                    component="label"
+                    fullWidth
+                    color="secondary"
+                    onClick={selectPhoto}
+                  >
                     {ADD_NEW_POST_TEXTS.UPLOAD_IMAGE}
                   </Button>
                   {preview ? (
                     <StyledImgPreview>
-                      <img src={preview} alt="Preview" width={300} height={300} />
-                      <StyledCloseEdit color="primary" onClick={handleDeleteImage}>
+                      <img
+                        src={preview}
+                        alt="Preview"
+                        width={300}
+                        height={300}
+                      />
+                      <StyledCloseEdit
+                        color="primary"
+                        onClick={handleDeleteImage}
+                      >
                         <CloseIcon />
                       </StyledCloseEdit>
                     </StyledImgPreview>
                   ) : (
                     <StyledImgPreview>
-                      <img src={post?.photo || noImage} alt="Preview" width={300} height={300} />
+                      <img
+                        src={post?.photo || noImage}
+                        alt="Preview"
+                        width={300}
+                        height={300}
+                      />
                     </StyledImgPreview>
                   )}
                 </Stack>
@@ -326,7 +372,10 @@ export const PostPage: React.FC<{}> = () => {
                 <CommentIcon color="secondary" />
               </StyledPostComments>
               <StyledPostLikes>
-                <Typography variant="body1" color={isPostLiked ? "success" : "primary"}>
+                <Typography
+                  variant="body1"
+                  color={isPostLiked ? "success" : "primary"}
+                >
                   {post?.likes?.length}
                 </Typography>
                 <IconButton onClick={likePost}>
