@@ -23,6 +23,7 @@ const app = express();
 app.use(cookieParser());
 app.use(cors(corsOptions));
 app.use("/public", express.static("public"));
+app.use(express.static("front"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/posts", postsRoute);
