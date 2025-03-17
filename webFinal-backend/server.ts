@@ -14,7 +14,9 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 
 const corsOptions = {
-  origin: "http://localhost:5173", // Allow requests from your frontend
+  origin: (origin: any, callback: (arg0: null, arg1: boolean) => void) => {
+    callback(null, true); // Allow all origins
+  }, // Allow requests from your frontend
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true, // Allow credentials (cookies, authorization headers)
 };
