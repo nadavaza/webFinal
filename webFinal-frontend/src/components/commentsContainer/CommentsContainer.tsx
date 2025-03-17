@@ -1,10 +1,10 @@
 import React from "react";
 import { IComment } from "./../../types/comments.types";
 import { StyledPostCommentsContainer } from "./commentsContainer.styles";
-import { Comment } from "../comment/Comment";
 import { Typography } from "@mui/material";
 import { POST_TEXTS } from "../../consts/postConsts";
 import Divider from "@mui/material/Divider";
+import { Comment } from "../comment/Comment";
 
 export const CommentsContainer: React.FC<{
   comments?: IComment[];

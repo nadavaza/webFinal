@@ -134,7 +134,7 @@ export const Profile: React.FC<{}> = ({}) => {
                         setPreview(URL.createObjectURL(files[0]));
                       }
                     }}
-                    onClick={(e) => {
+                    onClick={(e: any) => {
                       e.target.value = null;
                     }}
                   />

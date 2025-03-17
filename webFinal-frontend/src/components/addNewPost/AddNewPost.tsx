@@ -87,7 +87,7 @@ export const AddNewPost: React.FC<{ onSave: (data: INewPost) => void }> = ({ onS
                         setPreview(URL.createObjectURL(files[0]));
                       }
                     }}
-                    onClick={(e) => {
+                    onClick={(e: any) => {
                       e.target.value = null;
                     }}
                   />

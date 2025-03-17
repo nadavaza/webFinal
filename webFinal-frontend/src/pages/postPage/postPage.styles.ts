@@ -1,4 +1,4 @@
-import { Card, IconButton, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import styled from "styled-components";
 
 export const StyledPostPage = styled("div")(() => ({
@@ -59,6 +59,6 @@ export const StyledPostLikes = styled("div")(() => ({
 }));
 
 export const StyledPostActions = styled("div")(() => ({
-  position: "absolute !important",
+  position: "absolute",
   right: "0",
 }));

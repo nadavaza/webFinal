@@ -22,9 +22,7 @@ export const StyledProfileCard = styled(Paper)(() => ({
 }));
 
 export const StyledCloseEdit = styled(IconButton)(() => ({
-  position: "absolute !important",
-  top: "0.5rem",
-  right: "0.5rem",
+  position: "absolute",
 }));
 
 export const StyledProfileStack = styled(Stack)(() => ({

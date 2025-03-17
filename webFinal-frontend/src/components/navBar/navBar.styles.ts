@@ -1,4 +1,4 @@
-import { AppBar, Paper } from "@mui/material";
+import { AppBar } from "@mui/material";
 import styled from "styled-components";
 
 export const StyledProfile = styled("div")(() => ({

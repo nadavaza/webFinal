@@ -63,7 +63,7 @@ export const Home: React.FC<{}> = () => {
       date: Date.now(),
       isAi: true,
     }));
-    setPosts([...posts, ...updatedPosts]);
+    setPosts([...posts, ...(updatedPosts as any)]);
   };
 
   return (

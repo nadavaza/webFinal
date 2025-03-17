@@ -4,7 +4,7 @@ import styled from "styled-components";
 export const StyledAddNewPost = styled("div")(() => ({
   bottom: "3rem",
   right: "3rem ",
-  position: "absolute !important",
+  position: "absolute",
 }));
 
 export const StyledAddFab = styled(Fab)(() => ({}));
@@ -12,8 +12,8 @@ export const StyledAddFab = styled(Fab)(() => ({}));
 export const StyledCloseEdit = styled(IconButton)(() => ({
   width: "fit-content",
   height: "fit-content",
-  right: "5rem",
-  position: "absolute !important",
+  right: "3rem",
+  position: "absolute",
 }));
 
 export const StyledImgPreview = styled("div")(() => ({

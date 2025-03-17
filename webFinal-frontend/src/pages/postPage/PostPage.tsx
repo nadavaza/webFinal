@@ -47,7 +47,7 @@ export const PostPage: React.FC<{}> = () => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const fileInput = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const { handleSubmit, control, reset, setValue } = useForm({
+  const { handleSubmit, control, setValue } = useForm({
     defaultValues: {
       title: post?.title,
       content: post?.content,
@@ -92,7 +92,7 @@ export const PostPage: React.FC<{}> = () => {
     setValue("photo", post?.photo as any);
   };
 
-  const onSubmit = async (data: any, e: any): Promise<void> => {
+  const onSubmit = async (data: any): Promise<void> => {
     try {
       setIsloading(true);
       const updatedPost = await postsService.updatePost({ ...post, ...data });
@@ -147,7 +147,9 @@ export const PostPage: React.FC<{}> = () => {
     try {
       const { isLiked } = await postsService.likePost(postId!!, user._id);
       if (post) {
-        const updatedLikes = isLiked ? [...post.likes, user] : post.likes.filter((like) => like._id !== user._id);
+        const updatedLikes = isLiked
+          ? [...(post?.likes as any), user]
+          : post?.likes?.filter((like) => like._id !== user._id);
         setPost({ ...post, likes: updatedLikes });
       }
     } catch (error: any) {
@@ -279,7 +281,7 @@ export const PostPage: React.FC<{}> = () => {
                             setPreview(URL.createObjectURL(files[0]));
                           }
                         }}
-                        onClick={(e) => {
+                        onClick={(e: any) => {
                           e.target.value = null;
                         }}
                       />

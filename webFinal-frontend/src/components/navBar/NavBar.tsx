@@ -3,7 +3,7 @@ import { Avatar, Button, Toolbar, Typography } from "@mui/material";
 import { useNavigate, useLocation } from "react-router";
 import { StyledAppBar, StyledLogo, StyledProfile } from "./navBar.styles";
 import { toast } from "react-toastify";
-import { getTokens, setTokens } from "../../services/token-service";
+import { setTokens } from "../../services/token-service";
 import usersService from "../../services/users-service";
 import { HOME_TEXTS } from "../../consts/homeConsts";
 import PersonIcon from "@mui/icons-material/Person";
@@ -18,9 +18,8 @@ export const NavBar: React.FC<{}> = ({}) => {
 
   const logOut = async (): Promise<void> => {
     try {
-      const refreshToken = getTokens().refreshToken;
-      await usersService.logout(refreshToken);
-      setTokens("", "");
+      await usersService.logout();
+      setTokens("");
       navigate("/login");
     } catch (error: any) {
       toast(error.response.data, { position: "bottom-center", type: "error", delay: 500, theme: "colored" });

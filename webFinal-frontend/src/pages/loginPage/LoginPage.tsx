@@ -124,7 +124,7 @@ export const LoginPage: React.FC<{}> = () => {
                                   setPreview(URL.createObjectURL(files[0]));
                                 }
                               }}
-                              onClick={(e) => {
+                              onClick={(e: any) => {
                                 e.target.value = null;
                               }}
                             />
@@ -150,10 +150,10 @@ export const LoginPage: React.FC<{}> = () => {
                   return (
                     <Controller
                       key={field}
-                      name={field}
+                      name={field as any}
                       control={control}
                       rules={{ required: LOGIN_TEXTS.FIELD_REQUIRED }}
-                      render={({ field, fieldState }) => (
+                      render={({ field }) => (
                         <TextField
                           required
                           {...field}
